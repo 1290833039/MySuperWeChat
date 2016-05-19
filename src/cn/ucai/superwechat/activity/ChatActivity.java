@@ -98,6 +98,7 @@ import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.ImageUtils;
 import cn.ucai.superwechat.utils.SmileUtils;
 import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
 import cn.ucai.superwechat.widget.ExpandGridView;
 import cn.ucai.superwechat.widget.PasteEditText;
 import com.easemob.exceptions.EaseMobException;
@@ -107,7 +108,7 @@ import com.easemob.util.VoiceRecorder;
 
 /**
  * 聊天页面
- * 
+ *
  */
 public class ChatActivity extends BaseActivity implements OnClickListener, EMEventListener{
 	private static final String TAG = "ChatActivity";
@@ -670,7 +671,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					sendLocationMsg(latitude, longitude, "", locationAddress);
 				} else {
 					String st = getResources().getString(cn.ucai.superwechat.R.string.unable_to_get_loaction);
-					Toast.makeText(this, st, 0).show();
+					Toast.makeText(this, st, Toast.LENGTH_SHORT).show();
 				}
 				// 重发消息
 			} else if (requestCode == REQUEST_CODE_TEXT || requestCode == REQUEST_CODE_VOICE
@@ -739,7 +740,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			selectFileFromLocal();
 		} else if (id == cn.ucai.superwechat.R.id.btn_voice_call) { // 点击语音电话图标
 			if (!EMChatManager.getInstance().isConnected())
-				Toast.makeText(this, st1, 0).show();
+				Toast.makeText(this, st1, Toast.LENGTH_SHORT).show();
 			else{
 				startActivity(new Intent(ChatActivity.this, VoiceCallActivity.class).putExtra("username",
 						toChatUsername).putExtra("isComingCall", false));
@@ -748,7 +749,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			}
 		} else if (id == cn.ucai.superwechat.R.id.btn_video_call) { // 视频通话
 			if (!EMChatManager.getInstance().isConnected())
-				Toast.makeText(this, st1, 0).show();
+				Toast.makeText(this, st1, Toast.LENGTH_SHORT).show();
 			else{
 				startActivity(new Intent(this, VideoCallActivity.class).putExtra("username", toChatUsername).putExtra(
 						"isComingCall", false));
@@ -851,7 +852,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public void selectPicFromCamera() {
 		if (!CommonUtils.isExitsSdcard()) {
 			String st = getResources().getString(cn.ucai.superwechat.R.string.sd_card_does_not_exist);
-			Toast.makeText(getApplicationContext(), st, 0).show();
+			Toast.makeText(getApplicationContext(), st, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -898,9 +899,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * 发送文本消息
 	 * 
 	 * @param content
-	 *            message content
-	 * @param isResend
-	 *            boolean resend
+	 * @param
 	 */
 	public void sendText(String content) {
 
@@ -1125,12 +1124,12 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		File file = new File(filePath);
 		if (file == null || !file.exists()) {
 			String st7 = getResources().getString(cn.ucai.superwechat.R.string.File_does_not_exist);
-			Toast.makeText(getApplicationContext(), st7, 0).show();
+			Toast.makeText(getApplicationContext(), st7, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		if (file.length() > 10 * 1024 * 1024) {
 			String st6 = getResources().getString(cn.ucai.superwechat.R.string.The_file_is_not_greater_than_10_m);
-			Toast.makeText(getApplicationContext(), st6, 0).show();
+			Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -1240,7 +1239,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 */
 	public void toGroupDetails(View view) {
 		if (room == null && group == null) {
-			Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.gorup_not_found, 0).show();
+			Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		if(chatType == CHATTYPE_GROUP){
@@ -1415,6 +1414,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 						if (filename != "delete_expression") { // 不是删除键，显示表情
 							// 这里用的反射，所以混淆的时候不要混淆SmileUtils这个类
 							Class clz = Class.forName("SmileUtils");
+						//	Class clz = Class.forName(Utils.getPackageName(getApplicationContext())+"Utils.SmileUtils");
 							Field field = clz.getField(filename);
 							mEditTextContent.append(SmileUtils.getSmiledText(ChatActivity.this,
 									(String) field.get(null)));
@@ -1552,7 +1552,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
-							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.Move_into_blacklist_success, 0).show();
+							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.Move_into_blacklist_success, Toast.LENGTH_SHORT).show();
 						}
 					});
 				} catch (EaseMobException e) {
@@ -1560,7 +1560,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
-							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.Move_into_blacklist_failure, 0).show();
+							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.Move_into_blacklist_failure, Toast.LENGTH_SHORT).show();
 						}
 					});
 				}
@@ -1716,7 +1716,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 				public void run() {
 					if (toChatUsername.equals(groupId)) {
-						Toast.makeText(ChatActivity.this, st13, 1).show();
+						Toast.makeText(ChatActivity.this, st13, Toast.LENGTH_SHORT).show();
 						if (GroupDetailsActivity.instance != null)
 							GroupDetailsActivity.instance.finish();
 						finish();
@@ -1733,7 +1733,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 				public void run() {
 					if (toChatUsername.equals(groupId)) {
-						Toast.makeText(ChatActivity.this, st14, 1).show();
+						Toast.makeText(ChatActivity.this, st14, Toast.LENGTH_SHORT).show();
 						if (GroupDetailsActivity.instance != null)
 							GroupDetailsActivity.instance.finish();
 						finish();
