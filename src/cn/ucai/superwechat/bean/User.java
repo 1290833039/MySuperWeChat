@@ -17,6 +17,7 @@ public class User extends Location implements java.io.Serializable {
 	private String muserPassword;			//用户在环信服务器上的密码
 	private String muserNick;				//用户在环信服务器上的昵称
 	private Integer muserUnreadMsgCount;	//用户位置信息
+	private String header;					//保存昵称首字母的索引
 
 	// Constructors
 
@@ -85,13 +86,23 @@ public class User extends Location implements java.io.Serializable {
 		this.muserUnreadMsgCount = MUserUnreadMsgCount;
 	}
 
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
+
 	@Override
 	public String toString() {
-		return "User [MUserId=" + muserId + ", MUserName=" + muserName
-				+ ", MUserPassword=" + muserPassword + ", MUserNick="
-				+ muserNick + ", MUserUnreadMsgCount=" + muserUnreadMsgCount
-				+ "]";
+		return "User{" +
+				"muserId=" + muserId +
+				", muserName='" + muserName + '\'' +
+				", muserPassword='" + muserPassword + '\'' +
+				", muserNick='" + muserNick + '\'' +
+				", muserUnreadMsgCount=" + muserUnreadMsgCount +
+				", header='" + header + '\'' +
+				'}';
 	}
-	
-
 }
