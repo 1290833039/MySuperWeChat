@@ -10,11 +10,11 @@ public class Avatar extends Message implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private Integer mavatarId;		//用户在环信上的id
+	private Integer mavatarId;		//数据库中头像的id
 	private Integer mavatarUserId;  //用户id
-	private String mavatarUserName;	//用户名
+	private String mavatarUserName;	//用户名/账号
 	private String mavatarPath;		//头像路径
-	private Integer mavatarType;	//头像类型
+	private Integer mavatarType;	//头像类型  0表示用户 1表示群组
 
 	// Constructors
 

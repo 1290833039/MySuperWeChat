@@ -1,7 +1,7 @@
 package cn.ucai.superwechat;
 
 public interface I {
-    
+
 	interface User {
 		String TABLE_NAME							=		"t_superwechat_user";
 		String USER_ID 								= 		"m_user_id";					//主键

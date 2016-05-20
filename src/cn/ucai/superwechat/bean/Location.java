@@ -12,13 +12,13 @@ public class Location extends Avatar implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private Integer mlocationId;
-	private Integer mlocationUserId;
-	private String mlocationUserName;
-	private Double mlocationLatitude;
-	private Double mlocationLongitude;
-	private Boolean mlocationIsSearched;
-	private String mlocationLastUpdateTime;
+	private Integer mlocationId;				//地理位置信息的id
+	private Integer mlocationUserId;			//用户id
+	private String mlocationUserName;			//用户账号
+	private Double mlocationLatitude;			//经度
+	private Double mlocationLongitude;			//纬度
+	private Boolean mlocationIsSearched;		//是否可被搜索到
+	private String mlocationLastUpdateTime;		//更新时间
 
 	// Constructors
 

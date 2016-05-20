@@ -12,16 +12,16 @@ public class Group extends Location implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private Integer mgroupId;
-	private String mgroupHxid;
-	private String mgroupName;
-	private String mgroupDescription;
-	private String mgroupOwner;
-	private String mgroupLastModifiedTime;
-	private Integer mgroupMaxUsers;
-	private Integer mgroupAffiliationsCount;
-	private Boolean mgroupIsPublic;
-	private Boolean mgroupAllowInvites;
+	private Integer mgroupId;					//群组id
+	private String mgroupHxid;					//在环信服务器上的id
+	private String mgroupName;					//群组名称
+	private String mgroupDescription;			//群组描述
+	private String mgroupOwner;					//所有者
+	private String mgroupLastModifiedTime;		//更新时间
+	private Integer mgroupMaxUsers;				//最大人数
+	private Integer mgroupAffiliationsCount;	//当前人数
+	private Boolean mgroupIsPublic;				//是否公开
+	private Boolean mgroupAllowInvites;			//是否可以被邀请
 
 	// Constructors
 

@@ -11,11 +11,11 @@ public class Contact extends User implements java.io.Serializable {
 	 */
 	// Fields
 
-	private Integer mcontactId;
-	private Integer mcontactUserId;
-	private String mcontactUserName;
-	private Integer mcontactCid;
-	private String mcontactCname;
+	private Integer mcontactId;  			//联系人id
+	private Integer mcontactUserId;			//用户id
+	private String mcontactUserName;		//用户名
+	private Integer mcontactCid;			//好友id
+	private String mcontactCname;			//好友名
 
 	// Constructors
 
