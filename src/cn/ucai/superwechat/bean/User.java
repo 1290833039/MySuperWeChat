@@ -95,6 +95,22 @@ public class User extends Location implements java.io.Serializable {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof User)) return false;
+
+		User user = (User) o;
+
+		return muserName.equals(user.muserName);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return muserName.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return "User{" +
 				"muserId=" + muserId +

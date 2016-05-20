@@ -59,7 +59,7 @@ import com.easemob.chat.TextMessageBody;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.User;
@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		}
 
 		inviteMessgeDao = new InviteMessgeDao(this);
-		userDao = new UserDao(this);
+		EMUserDao = new EMUserDao(this);
 		// 这个fragment只显示好友和群组的聊天记录
 		// chatHistoryFragment = new ChatHistoryFragment();
 		// 显示所有人消息记录的fragment
@@ -245,7 +245,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                  // 存入内存
                 ((DemoHXSDKHelper)HXSDKHelper.getInstance()).setContactList(userlist);
                  // 存入db
-                UserDao dao = new UserDao(context);
+                EMUserDao dao = new EMUserDao(context);
                 List<User> users = new ArrayList<User>(userlist.values());
                 dao.saveContactList(users);
 
@@ -504,7 +504,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	}
 
 	private InviteMessgeDao inviteMessgeDao;
-	private UserDao userDao;
+	private EMUserDao EMUserDao;
 
 	/***
 	 * 好友变化listener
@@ -521,7 +521,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				User user = setUserHead(username);
 				// 添加好友时可能会回调added方法两次
 				if (!localUsers.containsKey(username)) {
-					userDao.saveContact(user);
+					EMUserDao.saveContact(user);
 				}
 				toAddUsers.put(username, user);
 			}
@@ -538,7 +538,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 			for (String username : usernameList) {
 				localUsers.remove(username);
-				userDao.deleteContact(username);
+				EMUserDao.deleteContact(username);
 				inviteMessgeDao.deleteMessage(username);
 			}
 			runOnUiThread(new Runnable() {
