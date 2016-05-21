@@ -28,10 +28,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
+
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
@@ -51,6 +54,7 @@ public class LoginActivity extends BaseActivity {
 	public static final int REQUEST_CODE_SETNICK = 1;
 	private EditText usernameEditText;
 	private EditText passwordEditText;
+	private Button mbtnUrl;
 
 	private boolean progressShow;
 	private boolean autoLogin = false;
@@ -73,6 +77,7 @@ public class LoginActivity extends BaseActivity {
 
 		usernameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.username);
 		passwordEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.password);
+		mbtnUrl = (Button) findViewById(R.id.btnUrl);
 
 		// 如果用户名改变，清空密码
 		usernameEditText.addTextChangedListener(new TextWatcher() {
@@ -158,7 +163,7 @@ public class LoginActivity extends BaseActivity {
 						public void run() {
 							pd.dismiss();
 							DemoHXSDKHelper.getInstance().logout(true,null);
-							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.login_failure_failed, 1).show();
+							Toast.makeText(getApplicationContext(), cn.ucai.superwechat.R.string.login_failure_failed, Toast.LENGTH_LONG).show();
 						}
 					});
 					return;
@@ -250,4 +255,5 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 	}
+
 }

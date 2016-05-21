@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/welcom_logo" />
+            android:src="@drawable/geek" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -125,5 +125,12 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
-
+    <Button
+        android:id="@+id/btnUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="设置服务端的IP地址"
+        android:textColor="#000"
+        android:background="@null"/>
 </LinearLayout>
