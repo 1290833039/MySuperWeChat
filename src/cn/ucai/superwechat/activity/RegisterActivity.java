@@ -13,8 +13,10 @@
  */
 package cn.ucai.superwechat.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,8 +27,10 @@ import android.widget.Toast;
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
 
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.listener.OnSetAvatarListener;
 
 import com.easemob.exceptions.EaseMobException;
 
@@ -35,13 +39,15 @@ import com.easemob.exceptions.EaseMobException;
  * 
  */
 public class RegisterActivity extends BaseActivity {
-	private Context mContext;
+	private Activity mContext;
 	private EditText userNameEditText;
 	private EditText nickNameEditText;
 	private EditText passwordEditText;
 	private EditText confirmPwdEditText;
 	private ImageView mIVAvatar;
+	private String avatarName;
 
+	OnSetAvatarListener mOnSetAvatarListener;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +60,30 @@ public class RegisterActivity extends BaseActivity {
 	private void setListener() {
 		register();
 		backLogin();
+		onSetAvatarListener();
+	}
+
+	private void onSetAvatarListener() {
+		findViewById(R.id.layout_user_avatar).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mOnSetAvatarListener = new OnSetAvatarListener(mContext,R.id.layout_register,getAvatarName(), I.AVATAR_TYPE_USER_PATH);
+			}
+		});
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode==RESULT_OK){
+			mOnSetAvatarListener.setAvatar(requestCode,data,mIVAvatar);
+		}
+
+	}
+
+	private String getAvatarName() {
+		avatarName = System.currentTimeMillis()+"";
+		return avatarName;
 	}
 
 	private void backLogin() {
@@ -66,9 +96,9 @@ public class RegisterActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		userNameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.username);
-		passwordEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.password);
-		confirmPwdEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.confirm_password);
+		userNameEditText = (EditText) findViewById(R.id.username);
+		passwordEditText = (EditText) findViewById(R.id.password);
+		confirmPwdEditText = (EditText) findViewById(R.id.confirm_password);
 		nickNameEditText = (EditText) findViewById(R.id.NickName);
 		mIVAvatar = (ImageView) findViewById(R.id.iv_Ravatar);
 	}

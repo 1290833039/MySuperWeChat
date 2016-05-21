@@ -49,6 +49,7 @@ public class ImageUtils {
 
 	/**
 	 * 返回头像保存的sd卡中的位置
+	 * Android/data/cn.ucai.superwechat/files/pictures/user_avatar
 	 * @param context
 	 * @param path
      * @return
