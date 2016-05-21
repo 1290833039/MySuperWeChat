@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * 登录
 	 */
-	public void login() {
+	private void login() {
 		findViewById(R.id.btnlogin).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -258,8 +258,14 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * 注册
 	 */
-	public void register() {
-		startActivityForResult(new Intent(this, RegisterActivity.class), 0);
+	private void register() {
+		findViewById(R.id.btnregister).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(mContext, RegisterActivity.class), 0);
+			}
+		});
+
 	}
 
 	@Override

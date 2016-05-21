@@ -158,7 +158,7 @@
             android:background="#fff" >
 
             <ImageView
-                android:id="@+id/iv_avatar"
+                android:id="@+id/iv_Ravatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -195,7 +195,6 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_register_bg"
-                android:onClick="register"
                 android:gravity="center"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
@@ -211,7 +210,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/button_login_bg"
-                android:onClick="register"
                 android:gravity="center"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
