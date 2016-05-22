@@ -13,9 +13,12 @@
  */
 package cn.ucai.superwechat.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.easemob.chat.EMContact;
 
-public class User extends EMContact {
+public class User extends EMContact implements Parcelable{
 	private int unreadMsgCount;
 	private String header;
 	private String avatar;
@@ -25,6 +28,38 @@ public class User extends EMContact {
 	public User(String username){
 	    this.username = username;
 	}
+
+	protected User(Parcel in) {
+	//	super(in);
+		unreadMsgCount = in.readInt();
+		header = in.readString();
+		avatar = in.readString();
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeInt(unreadMsgCount);
+		dest.writeString(header);
+		dest.writeString(avatar);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Creator<User> CREATOR = new Creator<User>() {
+		@Override
+		public User createFromParcel(Parcel in) {
+			return new User(in);
+		}
+
+		@Override
+		public User[] newArray(int size) {
+			return new User[size];
+		}
+	};
 
 	public String getHeader() {
 		return header;
