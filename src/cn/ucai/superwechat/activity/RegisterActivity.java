@@ -30,9 +30,15 @@ import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.bean.Message;
+import cn.ucai.superwechat.data.OkHttpUtils;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
+import cn.ucai.superwechat.utils.ImageUtils;
+import cn.ucai.superwechat.utils.Utils;
 
 import com.easemob.exceptions.EaseMobException;
+
+import java.io.File;
 
 /**
  * 注册页
@@ -160,7 +166,38 @@ public class RegisterActivity extends BaseActivity {
 		//首先注册远端服务器，并上传头像    ---okHttp
 		//注册环信账号
 		//如果环信注册失败，则调用取消注册方法，删除远端服务器账号和图片
+		//url= http://10.0.2.2:8080/SuperWeChatServer/Server?
+		// request=register&m_user_name=&m_user_nick=&m_user_password=
 
+		File file = new File(ImageUtils.getAvatarPath(mContext,I.AVATAR_TYPE_USER_PATH),
+				username + I.AVATAR_SUFFIX_JPG);
+		final OkHttpUtils<Message> utils = new OkHttpUtils<Message>();
+		utils.url(SuperWeChatApplication.SERVER_ROOT)
+				.addParam(I.KEY_REQUEST,I.REQUEST_REGISTER)
+				.addParam(I.User.USER_NAME,username)
+				.addParam(I.User.NICK,nick)
+				.addParam(I.User.PASSWORD,pwd)
+				.targetClass(Message.class)
+				.addFile(file)
+				.execute(new OkHttpUtils.OnCompleteListener<Message>(){
+					@Override
+					public void onSuccess(Message result) {
+						if (result.isResult()){
+							registerEMServer();
+						}else {
+							pd.dismiss();
+							Utils.showToast(mContext,Utils.getResourceString(mContext,result.getMsg()),Toast.LENGTH_LONG);
+
+						}
+					}
+
+					@Override
+					public void onError(String error) {
+						pd.dismiss();
+						Utils.showToast(mContext,error,Toast.LENGTH_LONG);
+
+					}
+				});
 
 	}
 
@@ -182,6 +219,9 @@ public class RegisterActivity extends BaseActivity {
 						}
 					});
 				} catch (final EaseMobException e) {
+					//调用取消注册方法
+					unRegister();
+
 					runOnUiThread(new Runnable() {
 						public void run() {
 							if (!RegisterActivity.this.isFinishing())
@@ -204,6 +244,31 @@ public class RegisterActivity extends BaseActivity {
 			}
 		}).start();
 	}
+	//取消注册方法
+	private void unRegister() {
+		//url=http://10.0.2.2:8080/SuperWeChatServer/Server?
+		// request=unregister&m_user_name=
+		OkHttpUtils<Message> utils = new OkHttpUtils<Message>();
+		utils.url(SuperWeChatApplication.SERVER_ROOT)
+				.addParam(I.KEY_REQUEST,I.REQUEST_UNREGISTER)
+				.addParam(I.User.USER_NAME,username)
+				.targetClass(Message.class)
+				.execute(new OkHttpUtils.OnCompleteListener<Message>(){
+					@Override
+					public void onSuccess(Message result) {
+						pd.dismiss();
+						Utils.showToast(mContext,Utils.getResourceString(mContext,result.getMsg()),Toast.LENGTH_LONG);
+
+					}
+					@Override
+					public void onError(String error) {
+						pd.dismiss();
+						Utils.showToast(mContext,error,Toast.LENGTH_LONG);
+
+					}
+				});
+	}
+
 	public void back(View view) {
 		finish();
 	}
