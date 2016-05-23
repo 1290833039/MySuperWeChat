@@ -67,8 +67,8 @@ public interface I {
 	String AVATAR_PATH 								= 		"//Users/clawpo/work/ucai/work/projects/SuperWeChat/teaching/201603/superwechatDB/";
 	String ISON8859_1 								= 		"iso8859-1";
 	String UTF_8 									= 		"utf-8";
-//	String PAGE_ID 									= 		"page_id";						//分页的起始下标
-//	String PAGE_SIZE 								= 		"page_size";					//分页的每页数量
+	String PAGE_ID 									= 		"page_id";						//分页的起始下标
+	String PAGE_SIZE 								= 		"page_size";					//分页的每页数量
 	int PAGE_ID_DEFAULT 							= 		0;								//分页的起始下标
 	int PAGE_SIZE_DEFAULT 							= 		6;								//分页的每页数量
 	int ID_DEFAULT									=		0;								//ID默认值
