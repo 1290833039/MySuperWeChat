@@ -278,8 +278,8 @@ public class LoginActivity extends BaseActivity {
 							utils.downloadFile(response,file,false);
 						}
 					}).execute(null);
-
-			/*runOnUiThread(new Runnable() {
+			//登录成功后下载联系人，群组等资料
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					new DownloadContactListTask(mContext,currentUsername).execute();
@@ -287,7 +287,7 @@ public class LoginActivity extends BaseActivity {
 					new DownloadPublicGroupTask(mContext,currentUsername,I.PAGE_ID_DEFAULT,I.PAGE_SIZE_DEFAULT).execute();
 
 				}
-			});*/
+			});
 
 			// 处理好友和群组
 			initializeContacts();
