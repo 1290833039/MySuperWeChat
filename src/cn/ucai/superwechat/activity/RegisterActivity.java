@@ -129,11 +129,13 @@ public class RegisterActivity extends BaseActivity {
 					userNameEditText.requestFocus();
 					userNameEditText.setError(getResources().getString(R.string.User_name_cannot_be_empty));
 					return;
-				} else if(username.matches("[\\w][\\w\\d_]+")){//正则表达式：第一个字符必须为字母，之后可以为字母，数字，_
+				}
+				/*else if(username.matches("[\\w][\\w\\d_]+")){//正则表达式：第一个字符必须为字母，之后可以为字母，数字，_
 					userNameEditText.requestFocus();
 					userNameEditText.setError(getResources().getString(R.string.User_name_cannot_be_wd));
 					return;
-				} else if (TextUtils.isEmpty(nick)) {
+				}*/
+				else if (TextUtils.isEmpty(nick)) {
 					nickNameEditText.requestFocus();
 					nickNameEditText.setError(getResources().getString(R.string.Nick_name_cannot_be_empty));
 					return;
