@@ -18,6 +18,9 @@ import cn.ucai.superwechat.utils.Utils;
 
 /**
  * Created by Administrator on 2016/5/23.
+ * DownloadContactListTask     update_contact_list
+ * url  http://10.0.2.2:8080/SuperWeChatServer/Server?request=download_contact_all_list&m_contact_user_name=
+ * DownloadAllGroupTask,I.REQUEST_DOWNLOAD_GROUPS,update_group_list
  */
 public class DownloadContactListTask extends BaseActivity{
     private static final String TAG = DownloadContactListTask.class.getName();
