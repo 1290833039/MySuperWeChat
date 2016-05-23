@@ -58,6 +58,26 @@ public class UserUtils {
         }
     }
 
+	//设置真实的用户头像
+	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
+		Contact contact = getUserBeanInfo(username);
+		if (contact!=null && contact.getMContactCname()!=null){
+			setUserAvatar(getAvatarPath(username),imageView);
+		}
+
+	}
+
+	public static void setUserAvatar(String url, NetworkImageView imageView) {
+		if (url==null || url.isEmpty()) return;
+		imageView.setDefaultImageResId(R.drawable.default_avatar);
+		imageView.setImageUrl(url, RequestManager.getImageLoader());
+		imageView.setErrorImageResId(R.drawable.default_avatar);
+	}
+	private static String getAvatarPath(String username) {
+		if (username==null || username.isEmpty()) return null;
+		return I.REQUEST_DOWNLOAD_AVATAR_USER + username;
+	}
+
 	/**
      * 设置当前用户头像
      */
