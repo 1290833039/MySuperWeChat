@@ -50,7 +50,7 @@ public class SplashActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
-		/*if (DemoHXSDKHelper.getInstance().isLogined()) {
+		if (DemoHXSDKHelper.getInstance().isLogined()) {
 			User user = SuperWeChatApplication.getInstance().getUser();
 			SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
 			instance.setUser(user);
@@ -62,7 +62,7 @@ public class SplashActivity extends BaseActivity {
 			new DownloadAllGroupTask(mContext, user.getMUserName()).execute();
 			new DownloadPublicGroupTask(mContext, user.getMUserName(), I.PAGE_ID_DEFAULT, I.PAGE_SIZE_DEFAULT).execute();
 		}
-		*/
+
 		new Thread(new Runnable() {
 			public void run() {
 				if (DemoHXSDKHelper.getInstance().isLogined()) {
