@@ -56,14 +56,14 @@ public class DownloadContactListTask extends BaseActivity{
                 if (contacts != null){
                     ArrayList<Contact> contactList =
                             SuperWeChatApplication.getInstance().getContactList();
-
+                    //得到返回的结果
                     ArrayList<Contact> list = Utils.array2List(contacts);
                     contactList.clear();
                     contactList.addAll(list);
                     HashMap<String,Contact> userList = SuperWeChatApplication.getInstance().getUserList();
                     userList.clear();
                     for(Contact c:list){
-                        userList.put(c.getMContactUserName(),c);
+                        userList.put(c.getMContactCname(),c);
                     }
 
                     mContext.sendStickyBroadcast(new Intent("update_contact_list"));
