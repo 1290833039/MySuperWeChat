@@ -5,10 +5,19 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.data.RequestManager;
 import cn.ucai.superwechat.domain.User;
+
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class UserUtils {
     /**
@@ -29,7 +38,13 @@ public class UserUtils {
         }
         return user;
     }
-    
+	//取得真实联系人数据
+	public static Contact getUserBeanInfo(String username){
+		Contact contact = SuperWeChatApplication.getInstance().getUserList().get(username);
+
+		return contact;
+	}
+
     /**
      * 设置用户头像
      * @param username
@@ -42,8 +57,8 @@ public class UserUtils {
             Picasso.with(context).load(cn.ucai.superwechat.R.drawable.default_avatar).into(imageView);
         }
     }
-    
-    /**
+
+	/**
      * 设置当前用户头像
      */
 	public static void setCurrentUserAvatar(Context context, ImageView imageView) {
@@ -79,7 +94,6 @@ public class UserUtils {
     
     /**
      * 保存或更新某个用户
-     * @param user
      */
 	public static void saveUserInfo(User newUser) {
 		if (newUser == null || newUser.getUsername() == null) {
