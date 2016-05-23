@@ -16,6 +16,7 @@ import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.bean.User;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.task.DownloadAllGroupTask;
 import cn.ucai.superwechat.task.DownloadContactListTask;
 import cn.ucai.superwechat.task.DownloadPublicGroupTask;
@@ -51,12 +52,11 @@ public class SplashActivity extends BaseActivity {
 		super.onStart();
 
 		if (DemoHXSDKHelper.getInstance().isLogined()) {
-			User user = SuperWeChatApplication.getInstance().getUser();
-			SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
-			instance.setUser(user);
+			String username = SuperWeChatApplication.getInstance().getUserName();
+			UserDao dao = new UserDao(mContext);
+			User user = dao.findUserByName(username);
+			SuperWeChatApplication.getInstance().setUser(user);
 			//登录成功
-			instance.setUserName(user.getMUserName());
-			instance.setPassword(user.getMUserPassword());
 			SuperWeChatApplication.currentUserNick = user.getMUserNick();
 			new DownloadContactListTask(mContext, user.getMUserName()).execute();
 			new DownloadAllGroupTask(mContext, user.getMUserName()).execute();
