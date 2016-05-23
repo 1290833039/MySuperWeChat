@@ -2,6 +2,7 @@ package cn.ucai.superwechat.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Response;
 
@@ -42,14 +43,16 @@ public class DownloadAllGroupTask extends BaseActivity {
 
     public void execute(){
         executeRequest(new GsonRequest<Group[]>(url,Group[].class,
-                responseDownloadContactListTaskListener(),errorListener()));
+                responseDownloadAllGroupTaskListener(),errorListener()));
     }
 
-    private Response.Listener<Group[]> responseDownloadContactListTaskListener() {
+    private Response.Listener<Group[]> responseDownloadAllGroupTaskListener() {
         return new Response.Listener<Group[]>(){
             @Override
             public void onResponse(Group[] response) {
-                if (response != null){
+                if (response != null && response.length>0){
+                    Log.i("main","DownloadAllGroupTask"+ response.length);
+
                     ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =
                             SuperWeChatApplication.getInstance().getGroupList();

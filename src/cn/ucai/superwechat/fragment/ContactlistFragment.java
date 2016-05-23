@@ -55,6 +55,7 @@ import java.util.Map.Entry;
 
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.activity.AddContactActivity;
 import cn.ucai.superwechat.activity.ChatActivity;
 import cn.ucai.superwechat.activity.GroupsActivity;
@@ -207,7 +208,7 @@ public class ContactlistFragment extends Fragment {
 		});
 		
 		// 设置adapter
-		adapter = new ContactAdapter(getActivity(), cn.ucai.superwechat.R.layout.row_contact, contactList);
+		adapter = new ContactAdapter(getActivity(), R.layout.row_contact, contactList);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -276,7 +277,7 @@ public class ContactlistFragment extends Fragment {
 			progressBar.setVisibility(View.GONE);
 		}
 	}
-
+	//上下文菜单
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -471,13 +472,13 @@ public class ContactlistFragment extends Fragment {
 			}
 		});
 
-		if(users.get(Constant.CHAT_ROBOT)!=null){
+	/*	if(users.get(Constant.CHAT_ROBOT)!=null){
 			contactList.add(0, users.get(Constant.CHAT_ROBOT));
 		}
 		// 加入"群聊"和"聊天室"
         if(users.get(Constant.CHAT_ROOM) != null)
             contactList.add(0, users.get(Constant.CHAT_ROOM));
-
+*/
         if(users.get(Constant.GROUP_USERNAME) != null)
             contactList.add(0, users.get(Constant.GROUP_USERNAME));
         

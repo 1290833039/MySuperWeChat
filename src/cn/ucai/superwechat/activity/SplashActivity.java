@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,16 +53,19 @@ public class SplashActivity extends BaseActivity {
 		super.onStart();
 
 		if (DemoHXSDKHelper.getInstance().isLogined()) {
-			String username = SuperWeChatApplication.getInstance().getUserName();
+
+
+			String userName = SuperWeChatApplication.getInstance().getUserName();
 			UserDao dao = new UserDao(SplashActivity.this);
-			User user = dao.findUserByUserName(username);
+			User user = dao.findUserByUserName(userName);
 			SuperWeChatApplication.getInstance().setUser(user);
+
 			//登录成功
 			if (user != null) {
 				SuperWeChatApplication.currentUserNick = user.getMUserNick();
-				new DownloadContactListTask(SplashActivity.this, user.getMUserName()).execute();
-				new DownloadAllGroupTask(SplashActivity.this, user.getMUserName()).execute();
-				new DownloadPublicGroupTask(SplashActivity.this, user.getMUserName(), I.PAGE_ID_DEFAULT, I.PAGE_SIZE_DEFAULT).execute();
+				new DownloadContactListTask(SplashActivity.this, userName).execute();
+				new DownloadAllGroupTask(SplashActivity.this, userName).execute();
+				new DownloadPublicGroupTask(SplashActivity.this, userName, I.PAGE_ID_DEFAULT, I.PAGE_SIZE_DEFAULT).execute();
 			}
 		}
 

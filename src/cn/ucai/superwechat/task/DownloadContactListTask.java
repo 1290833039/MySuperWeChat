@@ -2,6 +2,7 @@ package cn.ucai.superwechat.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Response;
 
@@ -54,6 +55,8 @@ public class DownloadContactListTask extends BaseActivity{
             @Override
             public void onResponse(Contact[] contacts) {
                 if (contacts != null){
+                    Log.i("main","DownloadContactListTask"+ contacts.length);
+
                     ArrayList<Contact> contactList =
                             SuperWeChatApplication.getInstance().getContactList();
                     //得到返回的结果

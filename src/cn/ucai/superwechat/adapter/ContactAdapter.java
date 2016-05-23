@@ -33,6 +33,7 @@ import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.util.EMLog;
 
 /**
@@ -61,7 +62,7 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
 	}
 	
 	private static class ViewHolder {
-	    ImageView avatar;
+	    NetworkImageView avatar;
 	    TextView unreadMsgView;
 	    TextView nameTextview;
 	    TextView tvHeader;
@@ -72,7 +73,7 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
  		if(convertView == null){
  		    holder = new ViewHolder();
 			convertView = layoutInflater.inflate(res, null);
-			holder.avatar = (ImageView) convertView.findViewById(cn.ucai.superwechat.R.id.avatar);
+			holder.avatar = (NetworkImageView) convertView.findViewById(cn.ucai.superwechat.R.id.avatar);
 			holder.unreadMsgView = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.unread_msg_number);
 			holder.nameTextview = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.name);
 			holder.tvHeader = (TextView) convertView.findViewById(cn.ucai.superwechat.R.id.header);

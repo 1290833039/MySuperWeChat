@@ -283,10 +283,10 @@ public class LoginActivity extends BaseActivity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					Log.i("main","DownloadContactListTask   DownloadAllGroupTask    DownloadPublicGroupTask");
 					new DownloadContactListTask(mContext,currentUsername).execute();
 					new DownloadAllGroupTask(mContext,currentUsername).execute();
 					new DownloadPublicGroupTask(mContext,currentUsername,I.PAGE_ID_DEFAULT,I.PAGE_SIZE_DEFAULT).execute();
-
 				}
 			});
 
@@ -361,13 +361,13 @@ public class LoginActivity extends BaseActivity {
 		userlist.put(Constant.GROUP_USERNAME, groupUser);
 		
 		// 添加"Robot"
-		cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
+		/*cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
 		String strRobot = getResources().getString(cn.ucai.superwechat.R.string.robot_chat);
 		robotUser.setUsername(Constant.CHAT_ROBOT);
 		robotUser.setNick(strRobot);
 		robotUser.setHeader("");
 		userlist.put(Constant.CHAT_ROBOT, robotUser);
-		
+		*/
 		// 存入内存
 		((DemoHXSDKHelper) HXSDKHelper.getInstance()).setContactList(userlist);
 		// 存入db

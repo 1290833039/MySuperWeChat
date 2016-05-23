@@ -364,6 +364,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						pd.dismiss();
+						//清除用户信息
 						SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
 						instance.getContactList().clear();
 						instance.getUserList().clear();

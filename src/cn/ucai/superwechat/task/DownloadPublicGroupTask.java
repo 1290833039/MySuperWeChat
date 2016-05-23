@@ -2,6 +2,7 @@ package cn.ucai.superwechat.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Response;
 
@@ -51,29 +52,24 @@ public class DownloadPublicGroupTask extends BaseActivity{
 
     public void execute(){
         executeRequest(new GsonRequest<Group[]>(url,Group[].class,
-                responseDownloadContactListTaskListener(),errorListener()));
+                responseDownloadPublicGroupTaskListener(),errorListener()));
     }
 
-    private Response.Listener<Group[]> responseDownloadContactListTaskListener() {
+    private Response.Listener<Group[]> responseDownloadPublicGroupTaskListener() {
         return new Response.Listener<Group[]>(){
             @Override
             public void onResponse(Group[] response) {
-                if (response != null){
+                if (response != null && response.length>0){
+                    Log.i("main","DownloadPublicGroupTask"+ response.length);
+
                     ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =
                             SuperWeChatApplication.getInstance().getPublicGroupList();
-                    groupsList.clear();
-                    groupsList.addAll(list);
-
-                    /*ArrayList<Group> list = Utils.array2List(contacts);
-                    groupsList.clear();
-                    groupsList.addAll(list);
-
-                    ArrayList<Group> groupList = SuperWeChatApplication.getInstance().getGroupList();
-                    groupList.clear();
                     for(Group g:list){
-                        groupList.put(g.getMGroupName(),g);
-                    }*/
+                        if (!groupsList.contains(g)){
+                            groupsList.add(g);
+                        }
+                    }
                     mContext.sendStickyBroadcast(new Intent("update_public_group"));
                 }
             }
