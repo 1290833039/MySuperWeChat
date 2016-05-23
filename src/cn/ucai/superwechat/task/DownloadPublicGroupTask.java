@@ -57,17 +57,17 @@ public class DownloadPublicGroupTask extends BaseActivity{
     private Response.Listener<Group[]> responseDownloadContactListTaskListener() {
         return new Response.Listener<Group[]>(){
             @Override
-            public void onResponse(Group[] contacts) {
-                if (contacts != null){
+            public void onResponse(Group[] response) {
+                if (response != null){
                     ArrayList<Group> groupsList =
                             SuperWeChatApplication.getInstance().getPublicGroupList();
 
-                    ArrayList<Group> list = Utils.array2List(contacts);
+                    /*ArrayList<Group> list = Utils.array2List(contacts);
                     groupsList.clear();
                     groupsList.addAll(list);
 
                     ArrayList<Group> groupList = SuperWeChatApplication.getInstance().getGroupList();
-                    /*groupList.clear();
+                    groupList.clear();
                     for(Group g:list){
                         groupList.put(g.getMGroupName(),g);
                     }*/
