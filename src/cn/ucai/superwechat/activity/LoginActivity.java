@@ -94,10 +94,9 @@ public class LoginActivity extends BaseActivity {
 		if (DemoHXSDKHelper.getInstance().isLogined()) {
 			autoLogin = true;
 			startActivity(new Intent(LoginActivity.this, MainActivity.class));
-
 			return;
 		}
-		setContentView(cn.ucai.superwechat.R.layout.activity_login);
+		setContentView(R.layout.activity_login);
 		mContext = this;
 
 		usernameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.username);
@@ -149,6 +148,8 @@ public class LoginActivity extends BaseActivity {
 				currentUsername = usernameEditText.getText().toString().trim();
 				currentPassword = passwordEditText.getText().toString().trim();
 
+		//		Toast.makeText(mContext, currentUsername+"   "+currentPassword, Toast.LENGTH_SHORT).show();
+
 				if (TextUtils.isEmpty(currentUsername)) {
 					Toast.makeText(mContext, cn.ucai.superwechat.R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
 					return;
@@ -158,8 +159,7 @@ public class LoginActivity extends BaseActivity {
 					return;
 				}
 				showProgressShow();
-
-				final long start = System.currentTimeMillis();
+			//	final long start = System.currentTimeMillis();
 				// 调用sdk登陆方法登陆聊天服务器
 				EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
 
@@ -173,6 +173,7 @@ public class LoginActivity extends BaseActivity {
 
 					@Override
 					public void onProgress(int progress, String status) {
+
 					}
 
 					@Override
@@ -196,7 +197,7 @@ public class LoginActivity extends BaseActivity {
 	//登录本地
 	private void loginAppServer() {
 		UserDao dao = new UserDao(mContext);
-		cn.ucai.superwechat.bean.User user = dao.findUserByName(currentUsername);
+		cn.ucai.superwechat.bean.User user = dao.findUserByUserName(currentUsername);
 		if (user!=null){
 			if (user.getMUserPassword().equals(MD5.getData(currentPassword))){
 			//	saveUser(user);
@@ -325,14 +326,20 @@ public class LoginActivity extends BaseActivity {
 		pd = new ProgressDialog(LoginActivity.this);
 		pd.setCanceledOnTouchOutside(false);
 		pd.setOnCancelListener(new OnCancelListener() {
-
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				progressShow = false;
 			}
 		});
-		pd.setMessage(getString(cn.ucai.superwechat.R.string.Is_landing));
-		pd.show();
+
+		pd.setMessage(getString(R.string.Is_landing));
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				pd.show();
+			}
+		});
+
 	}
 
 	private void initializeContacts() {
@@ -354,12 +361,12 @@ public class LoginActivity extends BaseActivity {
 		userlist.put(Constant.GROUP_USERNAME, groupUser);
 		
 		// 添加"Robot"
-		/*cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
+		cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
 		String strRobot = getResources().getString(cn.ucai.superwechat.R.string.robot_chat);
 		robotUser.setUsername(Constant.CHAT_ROBOT);
 		robotUser.setNick(strRobot);
 		robotUser.setHeader("");
-		userlist.put(Constant.CHAT_ROBOT, robotUser);*/
+		userlist.put(Constant.CHAT_ROBOT, robotUser);
 		
 		// 存入内存
 		((DemoHXSDKHelper) HXSDKHelper.getInstance()).setContactList(userlist);

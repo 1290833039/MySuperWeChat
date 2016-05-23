@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,7 +43,7 @@ import java.io.File;
 
 /**
  * 注册页
- * 
+ *
  */
 public class RegisterActivity extends BaseActivity {
 	private Activity mContext;
@@ -166,39 +167,36 @@ public class RegisterActivity extends BaseActivity {
 	}
 
 	private void registerAppServer() {
-		//首先注册远端服务器，并上传头像    ---okHttp
-		//注册环信账号
-		//如果环信注册失败，则调用取消注册方法，删除远端服务器账号和图片
-		//url= http://10.0.2.2:8080/SuperWeChatServer/Server?
+		//首先注册远端服务器账号，并上传头像--okhttp
+		//注册环信的账号 registerEMServer
+		//如果环信的服务器注册失败，删除远端服务器上面的账号和头像 unRegister-->okhttp
+		//http://10.0.2.2:8080/SuperWeChatServer/Server?
 		// request=register&m_user_name=&m_user_nick=&m_user_password=
-
-		File file = new File(ImageUtils.getAvatarPath(mContext,I.AVATAR_TYPE_USER_PATH),
-				username + I.AVATAR_SUFFIX_JPG);
-		final OkHttpUtils<Message> utils = new OkHttpUtils<Message>();
-		utils.url(SuperWeChatApplication.SERVER_ROOT)
-				.addParam(I.KEY_REQUEST,I.REQUEST_REGISTER)
-				.addParam(I.User.USER_NAME,username)
-				.addParam(I.User.NICK,nick)
-				.addParam(I.User.PASSWORD,pwd)
-				.targetClass(Message.class)
-				.addFile(file)
-				.execute(new OkHttpUtils.OnCompleteListener<Message>(){
+		File file  = new File(ImageUtils.getAvatarPath(mContext,I.AVATAR_TYPE_USER_PATH),
+				avatarName+I.AVATAR_SUFFIX_JPG);
+		OkHttpUtils<Message> utils = new OkHttpUtils<Message>();
+		utils.url(SuperWeChatApplication.SERVER_ROOT)//设置服务端根地址
+				.addParam(I.KEY_REQUEST,I.REQUEST_REGISTER)//天津爱上传的请求参数
+				.addParam(I.User.USER_NAME,username)//添加用户的账号
+				.addParam(I.User.NICK,nick)//添加用户的昵称
+				.addParam(I.User.PASSWORD,pwd)//添加用户密码
+				.targetClass(Message.class)//设置服务端返回json数据的解析类型
+				.addFile(file)//添加上传的文件
+				.execute(new OkHttpUtils.OnCompleteListener<Message>() {
 					@Override
 					public void onSuccess(Message result) {
-						if (result.isResult()){
+						if(result.isResult()){
 							registerEMServer();
 						}else {
 							pd.dismiss();
-							Utils.showToast(mContext,Utils.getResourceString(mContext,result.getMsg()),Toast.LENGTH_LONG);
-
+							Utils.showToast(mContext,Utils.getResourceString(mContext,result.getMsg()),Toast.LENGTH_SHORT);
 						}
 					}
 
 					@Override
 					public void onError(String error) {
 						pd.dismiss();
-						Utils.showToast(mContext,error,Toast.LENGTH_LONG);
-
+						Utils.showToast(mContext,error,Toast.LENGTH_SHORT);
 					}
 				});
 
