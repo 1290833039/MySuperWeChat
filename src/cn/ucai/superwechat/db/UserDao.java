@@ -5,15 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.bean.User;
 
 /**
- * Created by Administrator on 2016/5/20.
+ * Created by Administrator on 2016/5/19.
  */
 public class UserDao extends SQLiteOpenHelper {
-    public static final String TABLE_NAME = "user";
+    public static final String TABLE_TAME="user";
 
     public UserDao(Context context) {
         super(context, "user.db", null, 1);
@@ -25,14 +24,14 @@ public class UserDao extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "DROP TABLE IF EXISTS " + I.User.TABLE_NAME + " " +
-                "CREATE TABLE " + I.User.TABLE_NAME + "(" +
-                I.User.USER_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                I.User.USER_NAME + "  TEXT NOT NULL," +
-                I.User.PASSWORD + "  TEXT NOT NULL," +
-                I.User.NICK + "  TEXT NOT NULL," +
-                I.User.UN_READ_MSG_COUNT + "  INTEGER DEFAULT 0" + ")";
-        //  db.execSQL(sql);
+        String sql= "DROP TABLE IF EXISTS"+ I.User.TABLE_NAME+" "+
+                "CREATE TABLE" + I.User.TABLE_NAME +
+                I.User.USER_ID +" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
+                I.User.USER_NAME +"  TEXT NOT NULL," +
+                I.User.PASSWORD +"  TEXT NOT NULL," +
+                I.User.NICK +" TEXT NOT NULL," +
+                I.User.UN_READ_MSG_COUNT +"INTEGER DEFAULT 0"+");";
+
     }
 
     @Override
@@ -40,52 +39,41 @@ public class UserDao extends SQLiteOpenHelper {
 
     }
 
-    /**
-     * 添加一个用户
-     */
-    public boolean addUser(User user) {
-        SQLiteDatabase db = getWritableDatabase();
+    public boolean addUser(User user){
         ContentValues values = new ContentValues();
-        values.put(I.User.USER_ID, user.getMUserId());
-        values.put(I.User.USER_NAME, user.getMUserName());
-        values.put(I.User.PASSWORD, user.getMUserPassword());
-        values.put(I.User.NICK, user.getMUserNick());
-        values.put(I.User.UN_READ_MSG_COUNT, user.getMUserUnreadMsgCount());
-
+        values.put(I.User.USER_ID,user.getMUserId());
+        values.put(I.User.USER_NAME,user.getMUserName());
+        values.put(I.User.NICK,user.getMUserNick());
+        values.put(I.User.PASSWORD,user.getMUserPassword());
+        values.put(I.User.UN_READ_MSG_COUNT,user.getMUserUnreadMsgCount());
+        SQLiteDatabase db = getWritableDatabase();
         long insert = db.insert(I.User.TABLE_NAME, null, values);
-        return insert > 0;
+        return insert>0;
     }
-
-    /**
-     * 根据用户账号更改一个用户
-     */
-    public boolean updateUser(User user) {
-        SQLiteDatabase db = getWritableDatabase();
+    public boolean updateUser(User user){
         ContentValues values = new ContentValues();
-        values.put(I.User.USER_ID, user.getMUserId());
-        values.put(I.User.PASSWORD, user.getMUserPassword());
-        values.put(I.User.NICK, user.getMUserNick());
-        values.put(I.User.UN_READ_MSG_COUNT, user.getMUserUnreadMsgCount());
-
-        long update = db.update(I.User.TABLE_NAME, values, "where " + I.User.USER_NAME + "=?", new String[]{user.getMUserName()});
-        return update > 0;
+        values.put(I.User.USER_ID,user.getMUserId());
+        values.put(I.User.USER_NAME,user.getMUserName());
+        values.put(I.User.NICK,user.getMUserNick());
+        values.put(I.User.PASSWORD,user.getMUserPassword());
+        values.put(I.User.UN_READ_MSG_COUNT,user.getMUserUnreadMsgCount());
+        SQLiteDatabase db = getWritableDatabase();
+        long insert = db.update(I.User.TABLE_NAME, values," where "+I.User.USER_NAME+"=?",new String[]{user.getMUserName()});
+        return insert>0;
     }
-    /**
-     * 根据用户账号查找用户
-     */
-    public User findUserByName(String username) {
+
+    public User findUserByName(String username){
         SQLiteDatabase db = getReadableDatabase();
-        String sql = "select * from " + TABLE_NAME + " where " + I.User.USER_NAME + "=?";
-        Cursor c = db.rawQuery(sql, new String[]{username});
-        if (c.moveToNext()) {
+        String sql="select * from " +TABLE_TAME+" where "+I.User.USER_NAME +"=?";
+        Cursor c =db.rawQuery(sql,new String[]{username});
+        if(c.moveToNext()){
             int uid = c.getInt(c.getColumnIndex(I.User.USER_ID));
             String nick = c.getString(c.getColumnIndex(I.User.NICK));
             String password = c.getString(c.getColumnIndex(I.User.PASSWORD));
             int unReaderMsgCount = c.getInt(c.getColumnIndex(I.User.UN_READ_MSG_COUNT));
-            return new User(uid, username, password, nick, unReaderMsgCount);
+            return new User(uid,username,password,nick,unReaderMsgCount);
         }
         c.close();
         return null;
     }
-
 }

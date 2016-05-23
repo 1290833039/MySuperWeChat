@@ -1,10 +1,4 @@
-package cn.ucai.superwechat.activity;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
+package cn.ucai.superwechat.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,8 +31,17 @@ import android.widget.Toast;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
+
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.activity.ChatActivity;
+import cn.ucai.superwechat.activity.MainActivity;
 import cn.ucai.superwechat.adapter.ChatAllHistoryAdapter;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 
@@ -46,7 +49,7 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
  * 显示所有会话记录，比较简单的实现，更好的可能是把陌生人存入本地，这样取到的聊天记录是可控的
  * 
  */
-public class ChatAllHistoryFragment extends Fragment implements View.OnClickListener {
+public class ChatAllHistoryFragment extends Fragment implements OnClickListener {
 
 	private InputMethodManager inputMethodManager;
 	private ListView listView;

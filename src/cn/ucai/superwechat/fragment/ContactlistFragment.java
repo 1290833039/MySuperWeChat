@@ -11,15 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.superwechat.activity;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+package cn.ucai.superwechat.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -49,18 +41,34 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import cn.ucai.superwechat.applib.controller.HXSDKHelper;
-import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
 import com.easemob.chat.EMContactManager;
-import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.DemoHXSDKHelper;
-import cn.ucai.superwechat.adapter.ContactAdapter;
-import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.db.EMUserDao;
-import cn.ucai.superwechat.domain.User;
-import cn.ucai.superwechat.widget.Sidebar;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.activity.AddContactActivity;
+import cn.ucai.superwechat.activity.ChatActivity;
+import cn.ucai.superwechat.activity.GroupsActivity;
+import cn.ucai.superwechat.activity.MainActivity;
+import cn.ucai.superwechat.activity.NewFriendsMsgActivity;
+import cn.ucai.superwechat.activity.PublicChatRoomsActivity;
+import cn.ucai.superwechat.activity.RobotsActivity;
+import cn.ucai.superwechat.adapter.ContactAdapter;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
+import cn.ucai.superwechat.db.EMUserDao;
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.domain.User;
+import cn.ucai.superwechat.widget.Sidebar;
 
 /**
  * 联系人列表页
@@ -85,7 +93,7 @@ public class ContactlistFragment extends Fragment {
     private User toBeProcessUser;
     private String toBeProcessUsername;
 
-	class HXContactSyncListener implements HXSDKHelper.HXSyncListener {
+	class HXContactSyncListener implements HXSyncListener {
 		@Override
 		public void onSyncSucess(final boolean success) {
 			EMLog.d(TAG, "on contact list sync success:" + success);
@@ -104,13 +112,13 @@ public class ContactlistFragment extends Fragment {
 		                        progressBar.setVisibility(View.GONE);
 		                    }
 		                }
-		                
+
 		            });
 				}
 			});
 		}
 	}
-	
+
 	class HXBlackListSyncListener implements HXSyncListener{
 
         @Override
@@ -122,13 +130,13 @@ public class ContactlistFragment extends Fragment {
                     blackList = EMContactManager.getInstance().getBlackListUsernames();
                     refresh();
                 }
-                
+
             });
         }
-	    
+
 	};
-	
-	class HXContactInfoSyncListener implements HXSDKHelper.HXSyncListener{
+
+	class HXContactInfoSyncListener implements HXSyncListener{
 
 		@Override
 		public void onSyncSucess(final boolean success) {
@@ -272,7 +280,7 @@ public class ContactlistFragment extends Fragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		if (((AdapterContextMenuInfo) menuInfo).position > 3) {
+		if (((AdapterContextMenuInfo) menuInfo).position > 1) {
 		    toBeProcessUser = adapter.getItem(((AdapterContextMenuInfo) menuInfo).position);
 		    toBeProcessUsername = toBeProcessUser.getUsername();
 			getActivity().getMenuInflater().inflate(cn.ucai.superwechat.R.menu.context_contact_list, menu);
@@ -319,7 +327,6 @@ public class ContactlistFragment extends Fragment {
 	/**
 	 * 删除联系人
 	 * 
-	 * @param toDeleteUser
 	 */
 	public void deleteContact(final User tobeDeleteUser) {
 		String st1 = getResources().getString(cn.ucai.superwechat.R.string.deleting);
@@ -464,12 +471,13 @@ public class ContactlistFragment extends Fragment {
 			}
 		});
 
-		if(users.get(Constant.CHAT_ROBOT)!=null){
+	/*	if(users.get(Constant.CHAT_ROBOT)!=null){
 			contactList.add(0, users.get(Constant.CHAT_ROBOT));
 		}
 		// 加入"群聊"和"聊天室"
         if(users.get(Constant.CHAT_ROOM) != null)
             contactList.add(0, users.get(Constant.CHAT_ROOM));
+		*/
         if(users.get(Constant.GROUP_USERNAME) != null)
             contactList.add(0, users.get(Constant.GROUP_USERNAME));
         

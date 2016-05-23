@@ -63,6 +63,9 @@ import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.User;
+import cn.ucai.superwechat.fragment.ChatAllHistoryFragment;
+import cn.ucai.superwechat.fragment.ContactlistFragment;
+import cn.ucai.superwechat.fragment.SettingsFragment;
 import cn.ucai.superwechat.utils.CommonUtils;
 import com.easemob.util.EMLog;
 import com.easemob.util.HanziToPinyin;
@@ -226,7 +229,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 groupUser.setHeader("");
                 userlist.put(Constant.GROUP_USERNAME, groupUser);
                 
-                 // 添加"聊天室"
+               /*  // 添加"聊天室"
                 User chatRoomItem = new User();
                 String strChatRoom = context.getString(cn.ucai.superwechat.R.string.chat_room);
                 chatRoomItem.setUsername(Constant.CHAT_ROOM);
@@ -240,7 +243,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         		robotUser.setUsername(Constant.CHAT_ROBOT);
         		robotUser.setNick(strRobot);
         		robotUser.setHeader("");
-        		userlist.put(Constant.CHAT_ROBOT, robotUser);
+        		userlist.put(Constant.CHAT_ROBOT, robotUser);*/
         		
                  // 存入内存
                 ((DemoHXSDKHelper)HXSDKHelper.getInstance()).setContactList(userlist);
@@ -547,7 +550,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					String st10 = getResources().getString(cn.ucai.superwechat.R.string.have_you_removed);
 					if (ChatActivity.activityInstance != null
 							&& usernameList.contains(ChatActivity.activityInstance.getToChatUsername())) {
-						Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
+						Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, Toast.LENGTH_LONG)
 								.show();
 						ChatActivity.activityInstance.finish();
 					}

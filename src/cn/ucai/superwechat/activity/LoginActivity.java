@@ -354,12 +354,12 @@ public class LoginActivity extends BaseActivity {
 		userlist.put(Constant.GROUP_USERNAME, groupUser);
 		
 		// 添加"Robot"
-		cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
+		/*cn.ucai.superwechat.domain.User robotUser = new cn.ucai.superwechat.domain.User();
 		String strRobot = getResources().getString(cn.ucai.superwechat.R.string.robot_chat);
 		robotUser.setUsername(Constant.CHAT_ROBOT);
 		robotUser.setNick(strRobot);
 		robotUser.setHeader("");
-		userlist.put(Constant.CHAT_ROBOT, robotUser);
+		userlist.put(Constant.CHAT_ROBOT, robotUser);*/
 		
 		// 存入内存
 		((DemoHXSDKHelper) HXSDKHelper.getInstance()).setContactList(userlist);

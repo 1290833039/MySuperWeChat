@@ -11,13 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ucai.superwechat.activity;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+package cn.ucai.superwechat.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,16 +40,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContact;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
-import cn.ucai.superwechat.SuperWeChatApplication;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.activity.ChatActivity;
+import cn.ucai.superwechat.activity.MainActivity;
 import cn.ucai.superwechat.adapter.ChatHistoryAdapter;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.User;
 
