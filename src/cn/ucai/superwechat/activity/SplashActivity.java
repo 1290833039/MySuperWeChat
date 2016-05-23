@@ -1,5 +1,6 @@
 package cn.ucai.superwechat.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,6 +13,12 @@ import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.bean.User;
+import cn.ucai.superwechat.task.DownloadAllGroupTask;
+import cn.ucai.superwechat.task.DownloadContactListTask;
+import cn.ucai.superwechat.task.DownloadPublicGroupTask;
 
 /**
  * 开屏页
@@ -20,6 +27,7 @@ import cn.ucai.superwechat.DemoHXSDKHelper;
 public class SplashActivity extends BaseActivity {
 	private RelativeLayout rootLayout;
 	private TextView versionText;
+	Activity mContext;
 	
 	private static final int sleepTime = 2000;
 
@@ -27,6 +35,7 @@ public class SplashActivity extends BaseActivity {
 	protected void onCreate(Bundle arg0) {
 		setContentView(cn.ucai.superwechat.R.layout.activity_splash);
 		super.onCreate(arg0);
+		mContext = this;
 
 		rootLayout = (RelativeLayout) findViewById(cn.ucai.superwechat.R.id.splash_root);
 		versionText = (TextView) findViewById(cn.ucai.superwechat.R.id.tv_version);
@@ -41,6 +50,19 @@ public class SplashActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
+		/*if (DemoHXSDKHelper.getInstance().isLogined()) {
+			User user = SuperWeChatApplication.getInstance().getUser();
+			SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
+			instance.setUser(user);
+			//登录成功
+			instance.setUserName(user.getMUserName());
+			instance.setPassword(user.getMUserPassword());
+			SuperWeChatApplication.currentUserNick = user.getMUserNick();
+			new DownloadContactListTask(mContext, user.getMUserName()).execute();
+			new DownloadAllGroupTask(mContext, user.getMUserName()).execute();
+			new DownloadPublicGroupTask(mContext, user.getMUserName(), I.PAGE_ID_DEFAULT, I.PAGE_SIZE_DEFAULT).execute();
+		}
+		*/
 		new Thread(new Runnable() {
 			public void run() {
 				if (DemoHXSDKHelper.getInstance().isLogined()) {

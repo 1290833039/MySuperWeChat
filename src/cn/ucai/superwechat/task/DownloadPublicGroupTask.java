@@ -40,7 +40,7 @@ public class DownloadPublicGroupTask extends BaseActivity{
 
     private void initUrl() {
         try {
-            url = new ApiParams().with(I.Contact.USER_NAME,username)
+            url = new ApiParams().with(I.User.USER_NAME,username)
                     .with(I.PAGE_ID,pageId+"")
                     .with(I.PAGE_SIZE,pageSize+"")
                     .getRequestUrl(I.REQUEST_FIND_PUBLIC_GROUPS);
@@ -59,8 +59,11 @@ public class DownloadPublicGroupTask extends BaseActivity{
             @Override
             public void onResponse(Group[] response) {
                 if (response != null){
+                    ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =
                             SuperWeChatApplication.getInstance().getPublicGroupList();
+                    groupsList.clear();
+                    groupsList.addAll(list);
 
                     /*ArrayList<Group> list = Utils.array2List(contacts);
                     groupsList.clear();

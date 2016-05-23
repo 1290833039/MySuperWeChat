@@ -24,20 +24,16 @@ public class DownloadAllGroupTask extends BaseActivity {
     Context mContext;
     String username;
     String url;
-    int pageId;
-    int pageSize;
 
-    public DownloadAllGroupTask(Context mContext, String username, int pageId, int pageSize) {
+    public DownloadAllGroupTask(Context mContext, String usernamee) {
         this.mContext = mContext;
         this.username = username;
-        this.pageId = pageId;
-        this.pageSize = pageSize;
         initUrl();
     }
 
     private void initUrl() {
         try {
-            url = new ApiParams().with(I.Contact.USER_NAME,username)
+            url = new ApiParams().with(I.User.USER_NAME,username)
                     .getRequestUrl(I.REQUEST_DOWNLOAD_GROUPS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,17 +50,12 @@ public class DownloadAllGroupTask extends BaseActivity {
             @Override
             public void onResponse(Group[] response) {
                 if (response != null){
+                    ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =
                             SuperWeChatApplication.getInstance().getGroupList();
-
-                    /*ArrayList<Group> list = Utils.array2List(contacts);
                     groupsList.clear();
                     groupsList.addAll(list);
-                    ArrayList<Group> groupList = SuperWeChatApplication.getInstance().getGroupList();
-                    groupList.clear();
-                    for(Group g:list){
-                        groupList.put(g.getMGroupName(),g);
-                    }*/
+
                     mContext.sendStickyBroadcast(new Intent("update_group_list"));
                 }
             }
