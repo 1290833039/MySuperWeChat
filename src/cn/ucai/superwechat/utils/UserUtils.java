@@ -39,7 +39,7 @@ public class UserUtils {
         }
         return user;
     }
-	//取得真实联系人数据
+	//取得真实联系人数据  --仿写
 	public static Contact getUserBeanInfo(String username){
 		Contact contact = SuperWeChatApplication.getInstance().getUserList().get(username);
 		Log.i("main","contact1:  "+contact);
@@ -59,7 +59,7 @@ public class UserUtils {
         }
     }
 
-	//设置真实的用户头像
+	//设置真实的用户头像  仿写
 	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
 		Contact contact = getUserBeanInfo(username);
 		Log.i("main","contact2:  "+contact);
@@ -94,7 +94,17 @@ public class UserUtils {
 			Picasso.with(context).load(cn.ucai.superwechat.R.drawable.default_avatar).into(imageView);
 		}
 	}
-    
+
+	//仿写设置当前用户头像
+	public static void setCurrentUserAvatar(NetworkImageView imageView){
+		cn.ucai.superwechat.bean.User user = SuperWeChatApplication.getInstance().getUser();
+		if (user!=null){
+			//调用仿写的设置用户头像方法
+			setUserAvatar(getAvatarPath(user.getMUserName()),imageView);
+		}
+	}
+
+
     /**
      * 设置用户昵称
      */
