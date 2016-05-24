@@ -73,6 +73,7 @@ import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.User;
+import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.widget.Sidebar;
 
 /**
@@ -513,7 +514,10 @@ public class ContactlistFragment extends Fragment {
 		/*if (mContactList.indexOf(newFriends)==-1){
 			this.mContactList.add(0, newFriends);
 		}*/
-
+		//为header设置内容
+		for (Contact contact:mContactList){
+			UserUtils.setUserHearder(contact.getMContactCname(),contact);
+		}
 		// 排序
 		Collections.sort(this.mContactList, new Comparator<Contact>() {
 			@Override
