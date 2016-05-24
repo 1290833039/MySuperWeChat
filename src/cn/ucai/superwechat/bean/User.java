@@ -16,7 +16,7 @@ public class User extends Location implements java.io.Serializable {
 	private String muserName;				//用户在环信服务器上的账号
 	private String muserPassword;			//用户在环信服务器上的密码
 	private String muserNick;				//用户在环信服务器上的昵称
-	private Integer muserUnreadMsgCount;	//用户位置信息
+	private Integer muserUnreadMsgCount = 0;	//用户位置信息
 	private String header;					//保存昵称首字母的索引
 
 	// Constructors
