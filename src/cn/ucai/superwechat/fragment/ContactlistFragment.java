@@ -58,6 +58,7 @@ import java.util.Map.Entry;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.activity.AddContactActivity;
 import cn.ucai.superwechat.activity.ChatActivity;
 import cn.ucai.superwechat.activity.GroupsActivity;
@@ -68,6 +69,7 @@ import cn.ucai.superwechat.activity.RobotsActivity;
 import cn.ucai.superwechat.adapter.ContactAdapter;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
+import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.User;
@@ -96,6 +98,9 @@ public class ContactlistFragment extends Fragment {
     private User toBeProcessUser;
     private String toBeProcessUsername;
 	ContactListChangeReceiver mReceiver;
+
+	ArrayList<Contact> mContactList;
+
 
 	class HXContactSyncListener implements HXSyncListener {
 		@Override
@@ -178,6 +183,9 @@ public class ContactlistFragment extends Fragment {
 		//黑名单列表
 		blackList = EMContactManager.getInstance().getBlackListUsernames();
 		contactList = new ArrayList<User>();
+		//实例化联系人
+		mContactList = new ArrayList<Contact>();
+
 		// 获取设置contactlist
 		getContactList();
 		
@@ -478,9 +486,33 @@ public class ContactlistFragment extends Fragment {
 	 * 获取联系人列表，并过滤掉黑名单和排序
 	 */
 	private void getContactList() {
-		contactList.clear();
+	//	contactList.clear();
+		//添加本地联系人集合
+		mContactList.clear();
 		//获取本地好友列表
-		Map<String, User> users = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
+		ArrayList<Contact> contactList = SuperWeChatApplication.getInstance().getContactList();
+		mContactList.addAll(contactList);
+
+		// 添加"群聊"
+		Contact groupUser = new Contact();
+		String strGroup = getActivity().getString(cn.ucai.superwechat.R.string.group_chat);
+		groupUser.setMContactCname(Constant.GROUP_USERNAME);
+		groupUser.setMUserNick(strGroup);
+		groupUser.setHeader("");
+		if(!mContactList.contains(groupUser))
+			this.mContactList.add(0, groupUser);
+
+		// 添加user"申请与通知"
+		Contact newFriends = new Contact();
+		newFriends.setMContactCname(Constant.NEW_FRIENDS_USERNAME);
+		String strChat = getActivity().getString(cn.ucai.superwechat.R.string.Application_and_notify);
+		newFriends.setMUserNick(strChat);
+		if(!mContactList.contains(newFriends))
+			this.mContactList.add(0, newFriends);
+
+
+		//获取本地好友列表
+		/*Map<String, User> users = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
 		Iterator<Entry<String, User>> iterator = users.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, User> entry = iterator.next();
@@ -489,10 +521,10 @@ public class ContactlistFragment extends Fragment {
 			        && !entry.getKey().equals(Constant.CHAT_ROOM)
 					&& !entry.getKey().equals(Constant.CHAT_ROBOT)
 					&& !blackList.contains(entry.getKey()))
-				contactList.add(entry.getValue());
-		}
+				this.contactList.add(entry.getValue());
+		}*/
 		// 排序
-		Collections.sort(contactList, new Comparator<User>() {
+		Collections.sort(this.contactList, new Comparator<User>() {
 
 			@Override
 			public int compare(User lhs, User rhs) {
@@ -507,12 +539,12 @@ public class ContactlistFragment extends Fragment {
         if(users.get(Constant.CHAT_ROOM) != null)
             contactList.add(0, users.get(Constant.CHAT_ROOM));
 */
-        if(users.get(Constant.GROUP_USERNAME) != null)
-            contactList.add(0, users.get(Constant.GROUP_USERNAME));
+       /* if(users.get(Constant.GROUP_USERNAME) != null)
+            this.contactList.add(0, users.get(Constant.GROUP_USERNAME));
         
 		// 把"申请与通知"添加到首位
 		if(users.get(Constant.NEW_FRIENDS_USERNAME) != null)
-		    contactList.add(0, users.get(Constant.NEW_FRIENDS_USERNAME));
+		    this.contactList.add(0, users.get(Constant.NEW_FRIENDS_USERNAME));*/
 		
 	}
 	
@@ -534,7 +566,7 @@ public class ContactlistFragment extends Fragment {
 	    }
 	    
 	}
-	//定义一个广播接收者
+	//定义一个广播接收者  --刷新UI
 	class ContactListChangeReceiver extends BroadcastReceiver{
 		@Override
 		public void onReceive(Context context, Intent intent) {
