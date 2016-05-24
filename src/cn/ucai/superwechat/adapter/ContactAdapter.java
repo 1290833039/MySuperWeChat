@@ -34,6 +34,7 @@ import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.activity.BaseActivity;
 import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.data.RequestManager;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
 
@@ -110,7 +111,11 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 		if(username.equals(Constant.NEW_FRIENDS_USERNAME)){
 		    holder.nameTextview.setText(user.getMUserNick());
 		    holder.avatar.setDefaultImageResId(R.drawable.new_friends_icon);
-			if(user.getMUserUnreadMsgCount().intValue() > 0){
+
+			//解决点击搜索联系人就会把申请与通知的图片替换掉的bug
+			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
+			holder.avatar.setErrorImageResId(R.drawable.new_friends_icon);
+			if(user.getMUserUnreadMsgCount() > 0){
 			    holder.unreadMsgView.setVisibility(View.VISIBLE);
 //			    holder.unreadMsgView.setText(user.getUnreadMsgCount()+"");
 			}else{
@@ -120,6 +125,8 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 			//群聊item
 		    holder.nameTextview.setText(user.getMUserNick());
 		    holder.avatar.setDefaultImageResId(cn.ucai.superwechat.R.drawable.groups_icon);
+			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
+			holder.avatar.setErrorImageResId(R.drawable.groups_icon);
 		}else if(username.equals(Constant.CHAT_ROOM)){
             //群聊item
             holder.nameTextview.setText(user.getMUserNick());
