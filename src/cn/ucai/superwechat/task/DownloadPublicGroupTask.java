@@ -60,7 +60,7 @@ public class DownloadPublicGroupTask extends BaseActivity{
             @Override
             public void onResponse(Group[] response) {
                 if (response != null && response.length>0){
-                    Log.i("main","DownloadPublicGroupTask"+ response.length);
+                    Log.i("main","DownloadPublicGroupTask--->"+ response.length);
 
                     ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =

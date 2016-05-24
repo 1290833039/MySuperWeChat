@@ -2,6 +2,7 @@ package cn.ucai.superwechat.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class UserUtils {
 	//取得真实联系人数据
 	public static Contact getUserBeanInfo(String username){
 		Contact contact = SuperWeChatApplication.getInstance().getUserList().get(username);
-
+		Log.i("main","contact1:  "+contact);
 		return contact;
 	}
 
@@ -61,19 +62,23 @@ public class UserUtils {
 	//设置真实的用户头像
 	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
 		Contact contact = getUserBeanInfo(username);
+		Log.i("main","contact2:  "+contact);
 		if (contact!=null && contact.getMContactCname()!=null){
 			setUserAvatar(getAvatarPath(username),imageView);
 		}
 
 	}
-
+	//新加的方法
 	public static void setUserAvatar(String url, NetworkImageView imageView) {
+		Log.i("main","url:  "+url);
 		if (url==null || url.isEmpty()) return;
 		imageView.setDefaultImageResId(R.drawable.default_avatar);
 		imageView.setImageUrl(url, RequestManager.getImageLoader());
 		imageView.setErrorImageResId(R.drawable.default_avatar);
 	}
+	//新加的方法
 	private static String getAvatarPath(String username) {
+		Log.i("main","username:  "+username);
 		if (username==null || username.isEmpty()) return null;
 		return I.REQUEST_DOWNLOAD_AVATAR_USER + username;
 	}
@@ -95,13 +100,29 @@ public class UserUtils {
      */
     public static void setUserNick(String username,TextView textView){
     	User user = getUserInfo(username);
+
     	if(user != null){
     		textView.setText(user.getNick());
     	}else{
     		textView.setText(username);
     	}
     }
-    
+
+	//设置昵称
+	public static void setUserBeanNick(String username,TextView textView){
+		Contact contact = getUserBeanInfo(username);
+		if (contact!=null){
+			if (contact.getMUserNick()!=null){
+				textView.setText(contact.getMUserNick());
+			}else if (contact.getMContactCname()!=null){
+				textView.setText(contact.getMContactCname());
+			}
+		}else{
+			textView.setText(username);
+		}
+
+	}
+
     /**
      * 设置当前用户昵称
      */
