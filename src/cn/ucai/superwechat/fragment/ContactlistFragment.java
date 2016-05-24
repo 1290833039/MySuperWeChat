@@ -14,8 +14,10 @@
 package cn.ucai.superwechat.fragment;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -93,6 +95,7 @@ public class ContactlistFragment extends Fragment {
 	Handler handler = new Handler();
     private User toBeProcessUser;
     private String toBeProcessUsername;
+	ContactListChangeReceiver mReceiver;
 
 	class HXContactSyncListener implements HXSyncListener {
 		@Override
@@ -276,6 +279,8 @@ public class ContactlistFragment extends Fragment {
 		} else {
 			progressBar.setVisibility(View.GONE);
 		}
+		//调用注册广播的方法
+		registerContactListChangeReceiver();
 	}
 	//上下文菜单
 	@Override
@@ -433,6 +438,10 @@ public class ContactlistFragment extends Fragment {
 		if(contactInfoSyncListener != null){
 			((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
 		}
+		//解除广播注册
+		if (mReceiver!=null){
+			getActivity().unregisterReceiver(mReceiver);
+		}
 		super.onDestroy();
 	}
 	
@@ -506,4 +515,19 @@ public class ContactlistFragment extends Fragment {
 	    }
 	    
 	}
+	//定义一个广播接收者
+	class ContactListChangeReceiver extends BroadcastReceiver{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// 刷新ui
+			refresh();
+		}
+	}
+	//注册广播
+	private void registerContactListChangeReceiver(){
+		mReceiver = new ContactListChangeReceiver();
+		IntentFilter filter = new IntentFilter("update_contact_list");
+		getActivity().registerReceiver(mReceiver,filter);
+	}
+
 }

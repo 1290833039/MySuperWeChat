@@ -31,6 +31,8 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
+
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMConversation;
@@ -108,6 +110,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
 		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+			//和谁聊天的头像----会话页面
+		//	UserUtils.setUserBeanAvatar(username, holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("群聊");
 

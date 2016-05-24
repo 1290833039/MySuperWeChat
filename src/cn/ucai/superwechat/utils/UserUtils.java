@@ -59,16 +59,17 @@ public class UserUtils {
         }
     }
 
-	//设置真实的用户头像  仿写
+	//设置真实的用户头像  仿写setUserAvatar(Context context, String username, ImageView imageView)方法
 	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
 		Contact contact = getUserBeanInfo(username);
 		Log.i("main","contact2:  "+contact);
 		if (contact!=null && contact.getMContactCname()!=null){
+			//调用自己写的设置用户头像方法
 			setUserAvatar(getAvatarPath(username),imageView);
 		}
 
 	}
-	//新加的方法
+	//新加的方法  设置用户头像
 	public static void setUserAvatar(String url, NetworkImageView imageView) {
 		Log.i("main","url:  "+url);
 		if (url==null || url.isEmpty()) return;
@@ -76,7 +77,7 @@ public class UserUtils {
 		imageView.setImageUrl(url, RequestManager.getImageLoader());
 		imageView.setErrorImageResId(R.drawable.default_avatar);
 	}
-	//新加的方法
+	//新加的方法  得到用户头像url
 	private static String getAvatarPath(String username) {
 		Log.i("main","username:  "+username);
 		if (username==null || username.isEmpty()) return null;
