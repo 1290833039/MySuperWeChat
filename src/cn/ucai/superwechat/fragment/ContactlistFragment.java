@@ -510,6 +510,19 @@ public class ContactlistFragment extends Fragment {
 		if(!mContactList.contains(newFriends))
 			this.mContactList.add(0, newFriends);
 
+		/*if (mContactList.indexOf(newFriends)==-1){
+			this.mContactList.add(0, newFriends);
+		}*/
+
+		// 排序
+		Collections.sort(this.mContactList, new Comparator<Contact>() {
+			@Override
+			public int compare(Contact lhs, Contact rhs) {
+				return lhs.getHeader().compareTo(rhs.getHeader());
+			}
+		});
+
+
 
 		//获取本地好友列表
 		/*Map<String, User> users = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
@@ -523,14 +536,13 @@ public class ContactlistFragment extends Fragment {
 					&& !blackList.contains(entry.getKey()))
 				this.contactList.add(entry.getValue());
 		}*/
-		// 排序
+		/*// 排序
 		Collections.sort(this.contactList, new Comparator<User>() {
-
 			@Override
 			public int compare(User lhs, User rhs) {
 				return lhs.getUsername().compareTo(rhs.getUsername());
 			}
-		});
+		});*/
 
 	/*	if(users.get(Constant.CHAT_ROBOT)!=null){
 			contactList.add(0, users.get(Constant.CHAT_ROBOT));
