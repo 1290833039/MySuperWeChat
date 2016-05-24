@@ -53,6 +53,8 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
+
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
@@ -639,7 +641,7 @@ public class MessageAdapter extends BaseAdapter{
 				textView.setText(itemStr);
 				textView.setTextSize(15);
 				try {
-					XmlPullParser xrp = context.getResources().getXml(cn.ucai.superwechat.R.drawable.menu_msg_text_color);
+					XmlPullParser xrp = context.getResources().getXml(R.drawable.menu_msg_text_color);
 					textView.setTextColor(ColorStateList.createFromXml(context.getResources(), xrp));
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -809,7 +811,7 @@ public class MessageAdapter extends BaseAdapter{
 								// message.setProgress(0);
 								holder.staus_iv.setVisibility(View.VISIBLE);
 								Toast.makeText(activity,
-										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0)
+										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_LONG)
 										.show();
 								timer.cancel();
 							}
@@ -935,7 +937,7 @@ public class MessageAdapter extends BaseAdapter{
 								// message.setProgress(0);
 								holder.staus_iv.setVisibility(View.VISIBLE);
 								Toast.makeText(activity,
-										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0)
+										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_LONG)
 										.show();
 								timer.cancel();
 							}
@@ -986,9 +988,9 @@ public class MessageAdapter extends BaseAdapter{
 						.getMsgId())&&VoicePlayClickListener.isPlaying) {
 			AnimationDrawable voiceAnimation;
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-				holder.iv.setImageResource(cn.ucai.superwechat.R.anim.voice_from_icon);
+				holder.iv.setImageResource(R.anim.voice_from_icon);
 			} else {
-				holder.iv.setImageResource(cn.ucai.superwechat.R.anim.voice_to_icon);
+				holder.iv.setImageResource(R.anim.voice_to_icon);
 			}
 			voiceAnimation = (AnimationDrawable) holder.iv.getDrawable();
 			voiceAnimation.start();
@@ -1157,7 +1159,7 @@ public class MessageAdapter extends BaseAdapter{
 								holder.tv.setVisibility(View.INVISIBLE);
 								holder.staus_iv.setVisibility(View.VISIBLE);
 								Toast.makeText(activity,
-										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0)
+										activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_LONG)
 										.show();
 								timer.cancel();
 							}
@@ -1225,7 +1227,6 @@ public class MessageAdapter extends BaseAdapter{
 	 * 
 	 * @param message
 	 * @param holder
-	 * @param position
 	 */
 	public void sendMsgInBackground(final EMMessage message, final ViewHolder holder) {
 		holder.staus_iv.setVisibility(View.GONE);
@@ -1347,7 +1348,7 @@ public class MessageAdapter extends BaseAdapter{
 							// message.setSendingStatus(Message.SENDING_STATUS_FAIL);
 							holder.staus_iv.setVisibility(View.VISIBLE);
 							Toast.makeText(activity,
-									activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0).show();
+									activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_LONG).show();
 						}
 					});
 				}
@@ -1400,13 +1401,13 @@ public class MessageAdapter extends BaseAdapter{
 					// holder.staus_iv.setVisibility(View.VISIBLE);
 				    
 				    if(message.getError() == EMError.MESSAGE_SEND_INVALID_CONTENT){
-				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.error_send_invalid_content), 0)
+				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.error_send_invalid_content), Toast.LENGTH_LONG)
                         .show();
 				    }else if(message.getError() == EMError.MESSAGE_SEND_NOT_IN_THE_GROUP){
-				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.error_send_not_in_the_group), 0)
+				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.error_send_not_in_the_group), Toast.LENGTH_LONG)
                         .show();
 				    }else{
-				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0)
+				        Toast.makeText(activity, activity.getString(cn.ucai.superwechat.R.string.send_fail) + activity.getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_LONG)
                         .show();
 				    }
 				}
@@ -1421,7 +1422,6 @@ public class MessageAdapter extends BaseAdapter{
 	 * 
 	 * @param thumbernailPath
 	 * @param iv
-	 * @param position
 	 * @return the image exists or not
 	 */
 	private boolean showImageView(final String thumbernailPath, final ImageView iv, final String localFullSizePath, String remoteDir,
