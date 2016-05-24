@@ -498,6 +498,7 @@ public class ContactlistFragment extends Fragment {
 		Contact groupUser = new Contact();
 		String strGroup = getActivity().getString(cn.ucai.superwechat.R.string.group_chat);
 		groupUser.setMContactCname(Constant.GROUP_USERNAME);
+		groupUser.setMUserName(Constant.GROUP_USERNAME);
 		groupUser.setMUserNick(strGroup);
 		groupUser.setHeader("");
 		if(!mContactList.contains(groupUser))
@@ -506,6 +507,7 @@ public class ContactlistFragment extends Fragment {
 		// 添加user"申请与通知"
 		Contact newFriends = new Contact();
 		newFriends.setMContactCname(Constant.NEW_FRIENDS_USERNAME);
+		newFriends.setMUserName(Constant.NEW_FRIENDS_USERNAME);
 		String strChat = getActivity().getString(cn.ucai.superwechat.R.string.Application_and_notify);
 		newFriends.setMUserNick(strChat);
 		if(!mContactList.contains(newFriends))

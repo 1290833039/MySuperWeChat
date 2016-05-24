@@ -53,8 +53,6 @@ public class SplashActivity extends BaseActivity {
 		super.onStart();
 
 		if (DemoHXSDKHelper.getInstance().isLogined()) {
-
-
 			String userName = SuperWeChatApplication.getInstance().getUserName();
 			UserDao dao = new UserDao(SplashActivity.this);
 			User user = dao.findUserByUserName(userName);
