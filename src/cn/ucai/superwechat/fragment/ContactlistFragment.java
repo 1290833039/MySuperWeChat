@@ -43,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
@@ -57,6 +58,7 @@ import java.util.Map.Entry;
 
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.activity.AddContactActivity;
@@ -70,6 +72,8 @@ import cn.ucai.superwechat.adapter.ContactAdapter;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper.HXSyncListener;
 import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.db.EMUserDao;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.User;
@@ -369,6 +373,21 @@ public class ContactlistFragment extends Fragment {
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
+		//添加删除本地联系人方法
+		try {
+			String path = new ApiParams()
+                    .with(I.Contact.USER_NAME,SuperWeChatApplication.getInstance().getUserName())
+                    .with(I.Contact.CU_NAME,tobeDeleteUser.getMContactCname())
+                    .getRequestUrl(I.REQUEST_DELETE_CONTACT);
+			//所有的fragment都是从MainActivity传过来的
+			((MainActivity)getActivity()).executeRequest(new GsonRequest<Boolean>(path,
+					Boolean.class,responseDeleteListener(tobeDeleteUser),
+					((MainActivity)getActivity()).errorListener()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//删除环信服务器上的好友
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -398,6 +417,19 @@ public class ContactlistFragment extends Fragment {
 			}
 		}).start();
 
+	}
+
+	private Response.Listener<Boolean> responseDeleteListener(final Contact tobeDeleteUser) {
+		return new Response.Listener<Boolean>() {
+			@Override
+			public void onResponse(Boolean response) {
+				if (response){
+					SuperWeChatApplication.getInstance().getUserList().remove(tobeDeleteUser.getMContactCname());
+					SuperWeChatApplication.getInstance().getContactList().remove(tobeDeleteUser);
+					getActivity().sendStickyBroadcast(new Intent("update_contact_list"));
+				}
+			}
+		};
 	}
 
 	/**
