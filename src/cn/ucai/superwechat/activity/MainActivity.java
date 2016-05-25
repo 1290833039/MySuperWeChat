@@ -13,6 +13,7 @@
  */
 package cn.ucai.superwechat.activity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -44,6 +46,9 @@ import com.easemob.EMEventListener;
 import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
+
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
@@ -58,8 +63,12 @@ import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.TextMessageBody;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.EMUserDao;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
 import cn.ucai.superwechat.domain.User;
@@ -96,7 +105,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	
 	private MyConnectionListener connectionListener = null;
 	private MyGroupChangeListener groupChangeListener = null;
-
+	Context mContext;
 	/**
 	 * 检查当前用户是否被删除
 	 */
@@ -124,7 +133,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		}
 		setContentView(cn.ucai.superwechat.R.layout.activity_main);
 		initView();
-
+		mContext = this;
 		// MobclickAgent.setDebugMode( true );
 		// --?--
 		MobclickAgent.updateOnlineConfig(this);
@@ -519,20 +528,65 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		public void onContactAdded(List<String> usernameList) {			
 			// 保存增加的联系人
 			Map<String, User> localUsers = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList();
+			//自己添加的代码
+			HashMap<String, Contact> userList = SuperWeChatApplication.getInstance().getUserList();
+
 			Map<String, User> toAddUsers = new HashMap<String, User>();
+			//自己添加的
+			ArrayList<String> toAddUserNames = new ArrayList<String>();
+			boolean isAdd = false;
 			for (String username : usernameList) {
 				User user = setUserHead(username);
 				// 添加好友时可能会回调added方法两次
 				if (!localUsers.containsKey(username)) {
 					EMUserDao.saveContact(user);
+				//	userDao.saveContact(user);
+					isAdd = true;
 				}
 				toAddUsers.put(username, user);
+				//自己加的
+				if (!userList.containsKey(username)){
+					toAddUserNames.add(username);
+				}
 			}
+			//自己加的
+			for(String name : toAddUserNames){
+				if (isAdd){
+					try {
+						String path = new ApiParams().with(I.Contact.USER_NAME,SuperWeChatApplication.getInstance().getUserName())
+                                .with(I.Contact.CU_NAME,name)
+                                .getRequestUrl(I.REQUEST_ADD_CONTACT);
+
+						executeRequest(new GsonRequest<Contact>(path,Contact.class,
+								responAddContactListener(),errorListener()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
 			localUsers.putAll(toAddUsers);
 			// 刷新ui
 			if (currentTabIndex == 1)
 				contactListFragment.refresh();
 
+		}
+
+		private Response.Listener<Contact> responAddContactListener() {
+			return new Response.Listener<Contact>(){
+				@Override
+				public void onResponse(Contact contact) {
+					if (contact!=null && contact.isResult()){
+						HashMap<String, Contact> userList = SuperWeChatApplication.getInstance().getUserList();
+						ArrayList<Contact> contactList = SuperWeChatApplication.getInstance().getContactList();
+						if (!userList.containsKey(contact.getMContactCname())){
+							userList.put(contact.getMContactCname(),contact);
+							contactList.add(contact);
+							mContext.sendStickyBroadcast(new Intent("update_contact_list"));
+						}
+					}
+				}
+			};
 		}
 
 		@Override

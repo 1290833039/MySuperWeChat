@@ -141,7 +141,6 @@ public class AddContactActivity extends BaseActivity {
                         UserUtils.setUserBeanAvatar(user,avatar);
                         UserUtils.setUserBeanNick(user,nameText);
                     }
-
                     mNotFind.setVisibility(View.GONE);
 
                 }else{
