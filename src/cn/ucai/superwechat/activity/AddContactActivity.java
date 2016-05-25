@@ -36,8 +36,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMContactManager;
 
+import java.util.HashMap;
+
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.bean.Message;
 import cn.ucai.superwechat.bean.User;
 import cn.ucai.superwechat.data.ApiParams;
@@ -127,13 +130,20 @@ public class AddContactActivity extends BaseActivity {
             @Override
             public void onResponse(User user) {
                 if (user!=null){
-                    //服务器存在此用户，显示此用户和添加按钮
+                    //判断是否为自己的好友
+                    HashMap<String, Contact> userList = SuperWeChatApplication.getInstance().getUserList();
+                    if (userList.containsKey(user.getMUserName())){
+                        startActivity(new Intent(AddContactActivity.this,UserProfileActivity.class)
+                        .putExtra("username",user.getMUserName()));
+                    }else{
+                        searchedUserLayout.setVisibility(View.VISIBLE);
+                        //设置用户头像,昵称
+                        UserUtils.setUserBeanAvatar(user,avatar);
+                        UserUtils.setUserBeanNick(user,nameText);
+                    }
+
                     mNotFind.setVisibility(View.GONE);
-                    searchedUserLayout.setVisibility(View.VISIBLE);
-                    nameText.setText(toAddUsername);
-                    //设置用户头像,昵称
-                    UserUtils.setUserBeanAvatar(user,avatar);
-                    UserUtils.setUserBeanNick(user,nameText);
+
                 }else{
                     //服务器存在此用户，显示此用户和添加按钮
                     searchedUserLayout.setVisibility(View.GONE);
