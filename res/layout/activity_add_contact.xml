@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            />
         
         <Button
             android:id="@+id/search"
@@ -53,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/mm_listitem"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             android:background="@drawable/mm_listitem"
             android:duplicateParentState="true" >
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/avatar"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -78,7 +79,8 @@
                 android:layout_marginLeft="18dp"
                 android:layout_toRightOf="@id/avatar"
                 android:textColor="#0F0F0F"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:text="xxx"/>
 
 
             <Button
@@ -96,5 +98,13 @@
                 android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/notFind"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="无结果"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="visible"/>
 </LinearLayout>
