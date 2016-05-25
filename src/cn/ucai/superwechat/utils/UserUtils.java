@@ -60,6 +60,14 @@ public class UserUtils {
             Picasso.with(context).load(cn.ucai.superwechat.R.drawable.default_avatar).into(imageView);
         }
     }
+	//添加查找好友时的对应用户头像
+	public static void setUserBeanAvatar(cn.ucai.superwechat.bean.User user, NetworkImageView imageView){
+		if (user!=null && user.getMUserName()!=null){
+			//调用自己写的设置用户头像方法
+			setUserAvatar(getAvatarPath(user.getMUserName()),imageView);
+		}
+
+	}
 
 	//设置真实的用户头像  仿写setUserAvatar(Context context, String username, ImageView imageView)方法
 	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
@@ -120,6 +128,17 @@ public class UserUtils {
     		textView.setText(username);
     	}
     }
+
+	//设置搜索好友昵称
+	public static void setUserBeanNick(cn.ucai.superwechat.bean.User user,TextView textView){
+		if (user!=null) {
+			if (user.getMUserNick() != null) {
+				textView.setText(user.getMUserNick());
+			} else if (user.getMUserName() != null) {
+				textView.setText(user.getMUserName());
+			}
+		}
+	}
 
 	//设置昵称
 	public static void setUserBeanNick(String username,TextView textView){
