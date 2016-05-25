@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -29,7 +30,8 @@ import cn.ucai.superwechat.task.DownloadPublicGroupTask;
 public class SplashActivity extends BaseActivity {
 	private RelativeLayout rootLayout;
 	private TextView versionText;
-	Activity mContext;
+	Context mContext;
+	String userName;
 	
 	private static final int sleepTime = 2000;
 
@@ -53,18 +55,26 @@ public class SplashActivity extends BaseActivity {
 		super.onStart();
 
 		if (DemoHXSDKHelper.getInstance().isLogined()) {
-			String userName = SuperWeChatApplication.getInstance().getUserName();
+			Log.i("main","----------------11111111111----------");
+			userName = SuperWeChatApplication.getInstance().getUserName();
 			UserDao dao = new UserDao(SplashActivity.this);
 			User user = dao.findUserByUserName(userName);
 			SuperWeChatApplication.getInstance().setUser(user);
 
+			Log.i("main",userName+"-------------");
 			//登录成功
-			if (user != null) {
-				SuperWeChatApplication.currentUserNick = user.getMUserNick();
-				new DownloadContactListTask(SplashActivity.this, userName).execute();
-				new DownloadAllGroupTask(SplashActivity.this, userName).execute();
-				new DownloadPublicGroupTask(SplashActivity.this, userName, I.PAGE_ID_DEFAULT, I.PAGE_SIZE_DEFAULT).execute();
-			}
+		//	if (user != null) {
+				Log.i("main","----------------22222222222222----------");
+			//	SuperWeChatApplication.currentUserNick = user.getMUserNick();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						new DownloadContactListTask(mContext,userName).execute();
+						new DownloadAllGroupTask(mContext,userName).execute();
+						new DownloadPublicGroupTask(mContext,userName,I.PAGE_ID_DEFAULT,I.PAGE_SIZE_DEFAULT).execute();
+					}
+				});
+		//	}
 		}
 
 		new Thread(new Runnable() {

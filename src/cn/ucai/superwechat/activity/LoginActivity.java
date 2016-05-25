@@ -226,9 +226,11 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onResponse(User user) {
 				if (user.isResult()){
+					Log.i("main","-----------"+user.isResult()+"-----------");
 					saveUser(user);
 					user.setMUserPassword(MD5.getData(user.getMUserPassword()));
 					UserDao dao = new UserDao(mContext);
+
 					dao.addUser(user);
 					loginSuccess();
 				}else {
@@ -240,6 +242,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void saveUser(cn.ucai.superwechat.bean.User user) {
+		Log.i("main","saveUser---"+user.toString()+"------------");
 		SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
 		instance.setUser(user);
 		//登录成功，保存用户名，密码

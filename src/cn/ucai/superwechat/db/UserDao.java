@@ -48,16 +48,18 @@ public class UserDao extends SQLiteOpenHelper {
     }
 
     public User findUserByUserName(String userName){
-        SQLiteDatabase db = getReadableDatabase();
+        Log.i("main","444444444444444");
+        SQLiteDatabase db = getWritableDatabase();
         String sql = "select * from "+ TABLE_NAME + " where " + I.User.USER_NAME  + "=?";
         Cursor c = db.rawQuery(sql,new String []{userName});
+        Log.i("main","555555555555-----------"+sql+"-------------"+c);
         if(c.moveToNext()){
             int uid = c.getInt(c.getColumnIndex(I.User.USER_ID));
             String nick = c.getString(c.getColumnIndex(I.User.NICK));
             String password = c.getString(c.getColumnIndex(I.User.PASSWORD));
             int unReaderMsgCount = c.getInt(c.getColumnIndex(I.User.UN_READ_MSG_COUNT));
             User user = new User(uid, userName, password, nick, unReaderMsgCount);
-            Log.i("main",user.toString());
+            Log.i("main","6666666666666666");
             return user;
         }
         c.close();

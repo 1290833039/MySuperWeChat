@@ -155,10 +155,20 @@ public class UserUtils {
 
 	}
 
+	/**
+	 * 设置当前用户昵称
+	 */
+	public static void setCurrentUserNick(TextView textView){
+		cn.ucai.superwechat.bean.User user = SuperWeChatApplication.getInstance().getUser();
+		if(user!=null && textView != null && user.getMUserNick()!=null){
+			textView.setText(user.getMUserNick());
+		}
+	}
+
     /**
-     * 设置当前用户昵称
+     * 自定义的设置当前用户昵称
      */
-    public static void setCurrentUserNick(TextView textView){
+    public static void setCurrentUserBeanNick(TextView textView){
     	User user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().getCurrentUserInfo();
     	if(textView != null){
     		textView.setText(user.getNick());
