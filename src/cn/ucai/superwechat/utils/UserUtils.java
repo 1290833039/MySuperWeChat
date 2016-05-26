@@ -44,7 +44,7 @@ public class UserUtils {
 	//取得真实联系人数据  --仿写
 	public static Contact getUserBeanInfo(String username){
 		Contact contact = SuperWeChatApplication.getInstance().getUserList().get(username);
-		Log.i("main","contact1:  "+contact);
+		Log.i("main","UserUtils---------> contact1:  "+contact);
 		return contact;
 	}
 
@@ -73,7 +73,7 @@ public class UserUtils {
 	//设置真实的用户头像  仿写setUserAvatar(Context context, String username, ImageView imageView)方法
 	public static void setUserBeanAvatar(String username, NetworkImageView imageView){
 		Contact contact = getUserBeanInfo(username);
-		Log.i("main","contact2:  "+contact);
+		Log.i("main","UserUtils---------> contact2:  "+contact);
 		if (contact!=null && contact.getMContactCname()!=null){
 			//调用自己写的设置用户头像方法
 			setUserAvatar(getAvatarPath(username),imageView);
@@ -84,15 +84,15 @@ public class UserUtils {
 	}
 	//新加的方法  设置用户头像
 	public static void setUserAvatar(String url, NetworkImageView imageView) {
-		Log.i("main","url:  "+url);
+		Log.i("main","UserUtils---------> url:  "+url);
 		if (url==null || url.isEmpty()) return;
 		imageView.setDefaultImageResId(R.drawable.default_avatar);
 		imageView.setImageUrl(url, RequestManager.getImageLoader());
 		imageView.setErrorImageResId(R.drawable.default_avatar);
 	}
 	//新加的方法  得到用户头像url
-	private static String getAvatarPath(String username) {
-		Log.i("main","username:  "+username);
+	public static String getAvatarPath(String username) {
+		Log.i("main","UserUtils---------> username:  "+username);
 		if (username==null || username.isEmpty()) return null;
 		return I.REQUEST_DOWNLOAD_AVATAR_USER + username;
 	}
