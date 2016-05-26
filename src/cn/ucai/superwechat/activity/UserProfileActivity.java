@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +38,7 @@ import cn.ucai.superwechat.data.ApiParams;
 import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
+import cn.ucai.superwechat.listener.OnSetAvatarListener;
 import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.utils.Utils;
 
@@ -53,8 +55,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private TextView tvUsername;
 	private ProgressDialog dialog;
 	private RelativeLayout rlNickName;
-	
-	Context mContext;
+
+	UserProfileActivity mContext;
+	OnSetAvatarListener mOnSetAvatarListener;
+	String avatarName;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -103,7 +107,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case cn.ucai.superwechat.R.id.user_head_avatar:
-			uploadHeadPhoto();
+			//实例化OnSetAvatarListener对象
+			mOnSetAvatarListener = new OnSetAvatarListener(mContext,R.id.layout_user_profile,
+					getAvatarName(),I.AVATAR_TYPE_USER_PATH);
+		//	uploadHeadPhoto();
 			break;
 		case cn.ucai.superwechat.R.id.rl_nickname:
 			final EditText editText = new EditText(this);
@@ -127,6 +134,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		}
 
 	}
+	//添加头像文件名方法
+	private String getAvatarName() {
+		avatarName = System.currentTimeMillis()+"";
+		return avatarName;
+	}
+
 	//更新远端服务器用户昵称
 	private void updateUserNick(String nickName){
 		try {
@@ -250,7 +263,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
+		/*switch (requestCode) {
 		case REQUESTCODE_PICK:
 			if (data == null || data.getData() == null) {
 				return;
@@ -264,8 +277,21 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			break;
 		default:
 			break;
-		}
+		}*/
 		super.onActivityResult(requestCode, resultCode, data);
+		//添加OnSetAvatarListener返回结果判定
+		if (resultCode!=RESULT_OK){
+			return;
+		}
+		mOnSetAvatarListener.setAvatar(requestCode,data,headAvatar);
+		if (requestCode==OnSetAvatarListener.REQUEST_CROP_PHOTO){
+			updateUserAvatar();
+		}
+	}
+	//上传头像
+	private void updateUserAvatar() {
+
+
 	}
 
 	public void startPhotoZoom(Uri uri) {
