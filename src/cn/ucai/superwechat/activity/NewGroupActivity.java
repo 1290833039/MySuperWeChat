@@ -40,14 +40,17 @@ public class NewGroupActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(cn.ucai.superwechat.R.layout.activity_new_group);
-		groupNameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_name);
-		introductionEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_introduction);
-		checkBox = (CheckBox) findViewById(cn.ucai.superwechat.R.id.cb_public);
-		memberCheckbox = (CheckBox) findViewById(cn.ucai.superwechat.R.id.cb_member_inviter);
-		openInviteContainer = (LinearLayout) findViewById(cn.ucai.superwechat.R.id.ll_open_invite);
-		
+		initView();
+		setListener();
+	}
+
+	private void setListener() {
+		setOnCheckchangedListener();
+	}
+
+	private void setOnCheckchangedListener() {
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
@@ -57,6 +60,14 @@ public class NewGroupActivity extends BaseActivity {
 				}
 			}
 		});
+	}
+
+	private void initView() {
+		groupNameEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_name);
+		introductionEditText = (EditText) findViewById(cn.ucai.superwechat.R.id.edit_group_introduction);
+		checkBox = (CheckBox) findViewById(cn.ucai.superwechat.R.id.cb_public);
+		memberCheckbox = (CheckBox) findViewById(cn.ucai.superwechat.R.id.cb_member_inviter);
+		openInviteContainer = (LinearLayout) findViewById(cn.ucai.superwechat.R.id.ll_open_invite);
 	}
 
 	/**
@@ -118,7 +129,7 @@ public class NewGroupActivity extends BaseActivity {
 							}
 						});
 					}
-					
+
 				}
 			}).start();
 		}
