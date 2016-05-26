@@ -114,6 +114,7 @@
 				android:gravity="center_vertical"
 				android:textColor="#3366cc"
                 android:background="#FFFFFF"
+                android:text="xxx"
                 />
             <ImageView 
                 android:id="@+id/ic_right_arrow"

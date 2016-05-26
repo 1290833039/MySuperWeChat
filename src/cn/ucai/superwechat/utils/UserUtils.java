@@ -65,8 +65,9 @@ public class UserUtils {
 		if (user!=null && user.getMUserName()!=null){
 			//调用自己写的设置用户头像方法
 			setUserAvatar(getAvatarPath(user.getMUserName()),imageView);
+		}else{
+			imageView.setDefaultImageResId(R.drawable.default_avatar);
 		}
-
 	}
 
 	//设置真实的用户头像  仿写setUserAvatar(Context context, String username, ImageView imageView)方法
@@ -76,6 +77,8 @@ public class UserUtils {
 		if (contact!=null && contact.getMContactCname()!=null){
 			//调用自己写的设置用户头像方法
 			setUserAvatar(getAvatarPath(username),imageView);
+		}else{
+			imageView.setDefaultImageResId(R.drawable.default_avatar);
 		}
 
 	}

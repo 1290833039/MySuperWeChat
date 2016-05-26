@@ -230,8 +230,8 @@ public class LoginActivity extends BaseActivity {
 					saveUser(user);
 					user.setMUserPassword(MD5.getData(user.getMUserPassword()));
 					UserDao dao = new UserDao(mContext);
-
 					dao.addUser(user);
+
 					loginSuccess();
 				}else {
 					pd.dismiss();
@@ -245,8 +245,8 @@ public class LoginActivity extends BaseActivity {
 		Log.i("main","saveUser---"+user.toString()+"------------");
 		SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
 		//保存用户信息
-		UserDao userDao= new UserDao(mContext);
-		userDao.addUser(user);
+	//	UserDao userDao= new UserDao(mContext);
+	//	userDao.addUser(user);
 
 		instance.setUser(user);
 		//登录成功，保存用户名，密码

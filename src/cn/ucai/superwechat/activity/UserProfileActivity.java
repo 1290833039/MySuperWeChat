@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,15 +23,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.EMValueCallBack;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
+
 import com.squareup.picasso.Picasso;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
@@ -45,12 +53,13 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private ProgressDialog dialog;
 	private RelativeLayout rlNickName;
 	
-	
-	
+	Context mContext;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(cn.ucai.superwechat.R.layout.activity_user_profile);
+		mContext = this;
 		initView();
 		initListener();
 	}
@@ -107,7 +116,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 								Toast.makeText(UserProfileActivity.this, getString(cn.ucai.superwechat.R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
 								return;
 							}
-							updateRemoteNick(nickString);
+							//先修改远端
+							updateUserNick(nickString);
 						}
 					}).setNegativeButton(cn.ucai.superwechat.R.string.dl_cancel, null).show();
 			break;
@@ -116,7 +126,38 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		}
 
 	}
-	
+	//更新远端服务器用户昵称
+	private void updateUserNick(String nickName){
+		try {
+			String path = new ApiParams()
+                    .with(I.User.USER_NAME,SuperWeChatApplication.getInstance().getUserName())
+                    .with(I.User.NICK,nickName)
+                    .getRequestUrl(I.REQUEST_UPDATE_USER_NICK);
+
+			executeRequest(new GsonRequest<cn.ucai.superwechat.bean.User>(path,cn.ucai.superwechat.bean.User.class,
+					responseUpdateNickListener(nickName),errorListener()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private Response.Listener<cn.ucai.superwechat.bean.User> responseUpdateNickListener(final String nickName) {
+		return new Response.Listener<cn.ucai.superwechat.bean.User>() {
+			@Override
+			public void onResponse(cn.ucai.superwechat.bean.User user) {
+				if (user!=null && user.isResult()){
+					//修改环信
+					updateRemoteNick(nickName);
+				}else{
+					Utils.showToast(mContext,Utils.getResourceString(mContext,user.getMsg()),Toast.LENGTH_LONG);
+					dialog.dismiss();
+				}
+			}
+		};
+
+	}
+
 	public void asyncFetchUserInfo(String username){
 		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<User>() {
 			
