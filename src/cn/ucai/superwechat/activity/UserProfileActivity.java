@@ -35,6 +35,7 @@ import com.easemob.chat.EMChatManager;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.data.ApiParams;
 import cn.ucai.superwechat.data.GsonRequest;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.User;
 import cn.ucai.superwechat.utils.UserUtils;
 import cn.ucai.superwechat.utils.Utils;
@@ -139,7 +140,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private Response.Listener<cn.ucai.superwechat.bean.User> responseUpdateNickListener(final String nickName) {
@@ -213,7 +213,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private void updateRemoteNick(final String nickName) {
 		dialog = ProgressDialog.show(this, getString(cn.ucai.superwechat.R.string.dl_update_nick), getString(cn.ucai.superwechat.R.string.dl_waiting));
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				boolean updatenick = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().updateParseNickName(nickName);
@@ -236,6 +235,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 							Toast.makeText(UserProfileActivity.this, getString(cn.ucai.superwechat.R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
 									.show();
 							tvNickName.setText(nickName);
+							//更新环信端成功后去更新本地数据库
+							SuperWeChatApplication.currentUserNick = nickName;
+							cn.ucai.superwechat.bean.User user = SuperWeChatApplication.getInstance().getUser();
+							user.setMUserNick(nickName);
+							UserDao dao = new UserDao(mContext);
+							dao.updateUser(user);
 						}
 					});
 				}
