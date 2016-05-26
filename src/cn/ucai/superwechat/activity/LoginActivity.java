@@ -244,6 +244,10 @@ public class LoginActivity extends BaseActivity {
 	private void saveUser(cn.ucai.superwechat.bean.User user) {
 		Log.i("main","saveUser---"+user.toString()+"------------");
 		SuperWeChatApplication instance = SuperWeChatApplication.getInstance();
+		//保存用户信息
+		UserDao userDao= new UserDao(mContext);
+		userDao.addUser(user);
+
 		instance.setUser(user);
 		//登录成功，保存用户名，密码
 		instance.setUserName(currentUsername);

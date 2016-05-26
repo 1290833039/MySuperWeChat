@@ -1,7 +1,9 @@
 package cn.ucai.superwechat.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -61,6 +63,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 	public TextView errorText;
 	private boolean hidden;
 	private List<EMConversation> conversationList = new ArrayList<EMConversation>();
+	private ContactListChangedReceiver mContactListChangedReceiver;
 		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 				EMConversation conversation = adapter.getItem(position);
 				String username = conversation.getUserName();
 				if (username.equals(SuperWeChatApplication.getInstance().getUserName()))
-					Toast.makeText(getActivity(), st2, 0).show();
+					Toast.makeText(getActivity(), st2, Toast.LENGTH_LONG).show();
 				else {
 				    // 进入聊天页面
 				    Intent intent = new Intent(getActivity(), ChatActivity.class);
@@ -156,7 +159,8 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 				hideSoftKeyboard();
 			}
 		});
-		
+		//注册广播
+		registerContactListChangedReceiver();
 	}
 
 	void hideSoftKeyboard() {
@@ -212,7 +216,6 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 	/**
 	 * 获取所有会话
 	 * 
-	 * @param context
 	 * @return
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         +	 */
 	private List<EMConversation> loadConversationsWithRecentChat() {
@@ -251,7 +254,6 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
 	/**
 	 * 根据最后一条消息的时间排序
 	 * 
-	 * @param usernames
 	 */
 	private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
 		Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
@@ -300,4 +302,26 @@ public class ChatAllHistoryFragment extends Fragment implements OnClickListener 
     @Override
     public void onClick(View v) {        
     }
+
+	class ContactListChangedReceiver extends BroadcastReceiver{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			adapter.notifyDataSetChanged();
+		}
+	}
+
+	private void registerContactListChangedReceiver(){
+		mContactListChangedReceiver = new ContactListChangedReceiver();
+		IntentFilter filter = new IntentFilter("update_contact_list");
+		getActivity().registerReceiver(mContactListChangedReceiver,filter);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		//取消注册广播
+		if (mContactListChangedReceiver!=null){
+			getActivity().unregisterReceiver(mContactListChangedReceiver);
+		}
+	}
 }

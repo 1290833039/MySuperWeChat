@@ -31,8 +31,10 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.activity.BaseActivity;
+import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.data.RequestManager;
 import cn.ucai.superwechat.domain.User;
@@ -115,7 +117,11 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
 			//解决点击搜索联系人就会把申请与通知的图片替换掉的bug
 			holder.avatar.setImageUrl("", RequestManager.getImageLoader());
 			holder.avatar.setErrorImageResId(R.drawable.new_friends_icon);
-			if(user.getMUserUnreadMsgCount() > 0){
+			//添加显示通知
+			int unreadMsgCount = ((DemoHXSDKHelper) HXSDKHelper.getInstance())
+					.getContactList().get(Constant.NEW_FRIENDS_USERNAME).getUnreadMsgCount();
+
+			if(user.getMUserUnreadMsgCount() > 0 || unreadMsgCount>0){
 			    holder.unreadMsgView.setVisibility(View.VISIBLE);
 //			    holder.unreadMsgView.setText(user.getUnreadMsgCount()+"");
 			}else{
