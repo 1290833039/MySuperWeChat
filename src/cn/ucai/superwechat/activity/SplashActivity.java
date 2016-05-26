@@ -61,7 +61,7 @@ public class SplashActivity extends BaseActivity {
 			User user = dao.findUserByUserName(userName);
 			SuperWeChatApplication.getInstance().setUser(user);
 
-			Log.i("main","SplashActivity---------userName=  "+userName+"-------------");
+			Log.i("main","SplashActivity---------userName=  "+userName+"-------------"+user);
 			//登录成功
 		//	if (user != null) {
 			//	SuperWeChatApplication.currentUserNick = user.getMUserNick();

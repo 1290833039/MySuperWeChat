@@ -74,7 +74,7 @@
         android:textSize="18sp" />
 
     <RelativeLayout
-        android:id="@+id/layout_group_avatar"
+        android:id="@+id/layout_group_icon"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginLeft="10dp"
@@ -83,13 +83,13 @@
         android:background="#fff" >
 
         <ImageView
-            android:id="@+id/iv_Ravatar"
+            android:id="@+id/iv_GroupRavatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dip"
-            android:src="@drawable/default_avatar" />
+            android:src="@drawable/group_icon" />
 
         <TextView
             android:id="@+id/tv_avatar"

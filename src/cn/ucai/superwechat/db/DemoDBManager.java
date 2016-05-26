@@ -81,7 +81,7 @@ public class DemoDBManager {
                 } else if (Character.isDigit(headerName.charAt(0))) {
                     user.setHeader("#");
                 } else {
-                    user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1))
+                    user.setHeader(HanziToPinyin.getInstance().get(headerName.trim().substring(0, 1))
                             .get(0).target.substring(0, 1).toUpperCase());
                     char header = user.getHeader().toLowerCase().charAt(0);
                     if (header < 'a' || header > 'z') {

@@ -225,6 +225,7 @@ public class LoginActivity extends BaseActivity {
 		return new Response.Listener<User>(){
 			@Override
 			public void onResponse(User user) {
+				pd.dismiss();
 				if (user.isResult()){
 					Log.i("main","LoginActivity-----------"+user.isResult()+"-----------");
 					saveUser(user);
@@ -234,7 +235,6 @@ public class LoginActivity extends BaseActivity {
 
 					loginSuccess();
 				}else {
-					pd.dismiss();
 					Utils.showToast(mContext,Utils.getResourceString(mContext,user.getMsg()),Toast.LENGTH_LONG);
 				}
 			}
