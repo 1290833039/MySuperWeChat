@@ -26,11 +26,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
 
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
 
 public class NewGroupActivity extends BaseActivity {
@@ -159,16 +161,33 @@ public class NewGroupActivity extends BaseActivity {
 				// 调用sdk创建群组方法
 				String groupName = groupNameEditText.getText().toString().trim();
 				String desc = introductionEditText.getText().toString();
-				String[] members = data.getStringArrayExtra("newmembers");
+				//自己自定义
+				Contact[] contacts = (Contact[]) data.getSerializableExtra("members");
+				String[] members = null;
+				String[] memberIds = null;
+				EMGroup emGroup;
+
+				if (contacts!=null){
+					members = new String[contacts.length];
+					memberIds = new String[contacts.length];
+					for (int i=0;i<contacts.length;i++){
+						members[i] = contacts[i].getMContactCname()+",";
+						memberIds[i] = contacts[i].getMContactId()+",";
+					}
+				}
+
 				try {
 					if(checkBox.isChecked()){
 						//创建公开群，此种方式创建的群，可以自由加入
 						//创建公开群，此种方式创建的群，用户需要申请，等群主同意后才能加入此群
-						EMGroupManager.getInstance().createPublicGroup(groupName, desc, members, true,200);
+						emGroup = EMGroupManager.getInstance().createPublicGroup(groupName, desc, members, true, 200);
 					}else{
 						//创建不公开群
-						EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members, memberCheckbox.isChecked(),200);
+						emGroup = EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members, memberCheckbox.isChecked(),200);
 					}
+					//添加
+					String hxId = emGroup.getGroupId();
+
 					runOnUiThread(new Runnable() {
 						public void run() {
 							progressDialog.dismiss();
