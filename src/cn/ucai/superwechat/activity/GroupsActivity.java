@@ -152,7 +152,8 @@ public class GroupsActivity extends BaseActivity {
 					Intent intent = new Intent(GroupsActivity.this, ChatActivity.class);
 					// it is group chat
 					intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
-					intent.putExtra("groupId", groupAdapter.getItem(position - 3).getGroupId());
+					//改
+					intent.putExtra("groupId", groupAdapter.getItem(position - 3).getMGroupHxid());
 					startActivityForResult(intent, 0);
 				}
 			}
@@ -234,7 +235,13 @@ public class GroupsActivity extends BaseActivity {
 	class GroupListChangedReceiver extends BroadcastReceiver{
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			refresh();
+			if (groupAdapter.getCount()>=3){
+				ArrayList<Group> list = SuperWeChatApplication.getInstance().getGroupList();
+				if (!grouplist.containsAll(list)){
+					groupAdapter.initList(list);
+				}
+
+			}
 		}
 	}
 
