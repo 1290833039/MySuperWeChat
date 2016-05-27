@@ -21,6 +21,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -91,7 +92,6 @@ public class GroupPickContactsActivity extends BaseActivity {
 		listView.setAdapter(contactAdapter);
 		((Sidebar) findViewById(cn.ucai.superwechat.R.id.sidebar)).setListView(listView);
 		listView.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				CheckBox checkBox = (CheckBox) view.findViewById(cn.ucai.superwechat.R.id.checkbox);
@@ -129,6 +129,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 		if (contacts.length>0){
 			return contacts;
 		}
+		Log.i("main","GroupPickContactsActivity---------> getToBeAddMembers");
 		return null;
 	}
 

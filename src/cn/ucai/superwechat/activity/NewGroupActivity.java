@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
@@ -81,9 +82,11 @@ public class NewGroupActivity extends BaseActivity {
 	}
 
 	private void setGroupIconClickListener() {
+		Log.i("main","NewGroupActivity---------> setGroupIconClickListener---------");
 		findViewById(R.id.layout_group_icon).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.i("main","NewGroupActivity---------> setGroupIconClickListener---------1");
 				mOnSetAvatarListener = new OnSetAvatarListener(mContext,R.id.layout_groups_avatar,
 						getAvatarName(), I.AVATAR_TYPE_GROUP_PATH);
 			}
@@ -91,16 +94,19 @@ public class NewGroupActivity extends BaseActivity {
 	}
 
 	private void setSaveGroupClickListener() {
+		Log.i("main","NewGroupActivity---------> setSaveGroupClickListener---------");
 		findViewById(R.id.saveGroup).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String str6 = getResources().getString(cn.ucai.superwechat.R.string.Group_name_cannot_be_empty);
 				String name = groupNameEditText.getText().toString();
 				if (TextUtils.isEmpty(name)) {
+					Log.i("main","NewGroupActivity---------> setSaveGroupClickListener---------1");
 					Intent intent = new Intent(NewGroupActivity.this, AlertDialog.class);
 					intent.putExtra("msg", str6);
 					startActivity(intent);
 				} else {
+					Log.i("main","NewGroupActivity---------> setSaveGroupClickListener---------2");
 					// 进通讯录选人
 					startActivityForResult(new Intent(NewGroupActivity.this, GroupPickContactsActivity.class)
 							.putExtra("groupName", name), CREATE_NEW_GROUP);
@@ -110,8 +116,8 @@ public class NewGroupActivity extends BaseActivity {
 	}
 
 	private void setOnCheckchangedListener() {
+		Log.i("main","NewGroupActivity---------> setOnCheckchangedListener---------1");
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
@@ -151,7 +157,7 @@ public class NewGroupActivity extends BaseActivity {
 			//1、创建环信的群组，拿到hxid
 			//2、创建远端的群组，并上传群组头像
 			//3、添加群组成员到远端
-
+			Log.i("main","NewGroupActivity---------> onActivityResult--------> newGroups");
 			newGroups(data);
 		}else{
 			mOnSetAvatarListener.setAvatar(requestCode,data,ivAvatar);
@@ -165,17 +171,17 @@ public class NewGroupActivity extends BaseActivity {
 		progressDialog.show();
 	}
 
-
+	//新建群组
 	private void newGroups(final Intent data) {
-		//新建群组
-		new Thread(new Runnable() {
+		Log.i("main","NewGroupActivity---------> newGroups");
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				// 调用sdk创建群组方法
 				String groupName = groupNameEditText.getText().toString().trim();
 				String desc = introductionEditText.getText().toString();
 				//自己自定义
-				Contact[] contacts = (Contact[]) data.getSerializableExtra("members");
+				Contact[] contacts = (Contact[]) data.getSerializableExtra("newmembers");
 				String[] members = null;
 				String[] memberIds = null;
 				EMGroup emGroup;
@@ -188,7 +194,7 @@ public class NewGroupActivity extends BaseActivity {
 						memberIds[i] = contacts[i].getMContactId()+",";
 					}
 				}
-
+				Log.i("main","NewGroupActivity---------> newGroups---------->contacts.length= "+contacts.length);
 				try {
 					if(checkBox.isChecked()){
 						//创建公开群，此种方式创建的群，可以自由加入
@@ -201,6 +207,7 @@ public class NewGroupActivity extends BaseActivity {
 					//添加
 					String hxId = emGroup.getGroupId();
 					//创建本地群组
+					Log.i("main","NewGroupActivity---------> createNewGroupAppServer");
 					createNewGroupAppServer(hxId,groupName,desc,contacts);
 
 					runOnUiThread(new Runnable() {
@@ -220,7 +227,7 @@ public class NewGroupActivity extends BaseActivity {
 				}
 
 			}
-		}).start();
+		});
 	}
 
 	private void createNewGroupAppServer(String hxId, String groupName, String desc, final Contact[] contacts) {
@@ -232,6 +239,9 @@ public class NewGroupActivity extends BaseActivity {
 		//添加群组成员
 		File file  = new File(ImageUtils.getAvatarPath(mContext,I.AVATAR_TYPE_GROUP_PATH),
 				avatarName+I.AVATAR_SUFFIX_JPG);
+
+		Log.i("main","NewGroupActivity---------> createNewGroupAppServer------>path= "+file.getAbsolutePath());
+
 		OkHttpUtils<Group> utils = new OkHttpUtils<Group>();
 		utils.url(SuperWeChatApplication.SERVER_ROOT)//设置服务端根地址
 				.addParam(I.KEY_REQUEST,I.REQUEST_CREATE_GROUP)//天津爱上传的请求参数
@@ -249,8 +259,11 @@ public class NewGroupActivity extends BaseActivity {
 					public void onSuccess(Group group) {
 						if(group.isResult()){
 							if (contacts!=null){
+								//调用
+								Log.i("main","NewGroupActivity---------> createNewGroupAppServer---------1");
 								addGroupMembers(group,contacts);
 							}else {
+								Log.i("main","NewGroupActivity---------> createNewGroupAppServer----------2");
 								SuperWeChatApplication.getInstance().getGroupList().add(group);
 								Intent intent = new Intent("update_group_list").putExtra("group",group);
 								setResult(RESULT_OK,intent);
@@ -262,7 +275,7 @@ public class NewGroupActivity extends BaseActivity {
 						}else {
 							progressDialog.dismiss();
 							Utils.showToast(mContext,Utils.getResourceString(mContext,group.getMsg()),Toast.LENGTH_SHORT);
-							Log.i("main",Utils.getResourceString(mContext,group.getMsg()));
+							Log.i("main","NewGroupActivity---------> createNewGroupAppServer---"+Utils.getResourceString(mContext,group.getMsg()));
 						}
 					}
 
@@ -303,12 +316,14 @@ public class NewGroupActivity extends BaseActivity {
 			@Override
 			public void onResponse(Message message) {
 				if (message.isResult()){
+					Log.i("main","NewGroupActivity------addGroupMembers-----OK");
 					progressDialog.dismiss();
 					SuperWeChatApplication.getInstance().getGroupList().add(group);
 					Intent intent = new Intent("update_group_list").putExtra("group",group);
 					Utils.showToast(mContext,Utils.getResourceString(mContext,group.getMsg()),Toast.LENGTH_LONG);
 					setResult(RESULT_OK,intent);
 				}else{
+					Log.i("main","NewGroupActivity------addGroupMembers-----Error");
 					progressDialog.dismiss();
 					Utils.showToast(mContext,R.string.Failed_to_create_groups,Toast.LENGTH_LONG);
 				}
