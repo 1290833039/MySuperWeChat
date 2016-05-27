@@ -45,6 +45,7 @@ import cn.ucai.superwechat.bean.User;
 import cn.ucai.superwechat.data.ApiParams;
 import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.data.OkHttpUtils;
+import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
 import cn.ucai.superwechat.utils.ImageUtils;
 import cn.ucai.superwechat.utils.Utils;
@@ -196,7 +197,7 @@ public class NewGroupActivity extends BaseActivity {
 					//	memberIds[i] = contacts[i].getMContactId()+",";
 					}
 				}
-				Log.i("main","NewGroupActivity---------> newGroups---------->contacts.length= "+contacts.length);
+
 				try {
 					if(checkBox.isChecked()){
 						//创建公开群，此种方式创建的群，可以自由加入
