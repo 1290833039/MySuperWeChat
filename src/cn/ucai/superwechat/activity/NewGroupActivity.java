@@ -332,7 +332,10 @@ public class NewGroupActivity extends BaseActivity {
 				}else{
 					Log.i("main","NewGroupActivity------addGroupMembers-----Error");
 					progressDialog.dismiss();
-					Utils.showToast(mContext,R.string.Failed_to_create_groups,Toast.LENGTH_LONG);
+					SuperWeChatApplication.getInstance().getGroupList().add(group);
+					Intent intent = new Intent("update_group_list").putExtra("group",group);
+					Utils.showToast(mContext,Utils.getResourceString(mContext,group.getMsg()),Toast.LENGTH_LONG);
+					setResult(RESULT_OK,intent);
 				}
 				finish();
 			}
