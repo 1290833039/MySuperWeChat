@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
@@ -40,6 +41,8 @@ import cn.ucai.superwechat.bean.Contact;
 import cn.ucai.superwechat.bean.Group;
 import cn.ucai.superwechat.bean.Message;
 import cn.ucai.superwechat.bean.User;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.data.OkHttpUtils;
 import cn.ucai.superwechat.listener.OnSetAvatarListener;
 import cn.ucai.superwechat.utils.ImageUtils;
@@ -274,8 +277,44 @@ public class NewGroupActivity extends BaseActivity {
 	}
 	//添加群组成员
 	private void addGroupMembers(Group group, Contact[] contacts) {
+		String userIds="";
+		String userNames="";
+		for (int i=0;i<contacts.length;i++){
+			userIds+=contacts[i].getMContactCid()+",";
+			userNames+=contacts[i].getMContactCname()+",";
+		}
+		try {
+			String path = new ApiParams()
+                    .with(I.Member.GROUP_HX_ID,group.getMGroupHxid())
+                    .with(I.Member.USER_ID,userIds)
+                    .with(I.Member.USER_NAME,userNames)
+                    .getRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS);
+			Log.i("main","NewGroupActivity------addGroupMembers-----path="+path);
+			executeRequest(new GsonRequest<Message>(path,Message.class,
+					responseListener(group),errorListener()));
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	private Response.Listener<Message> responseListener(final Group group) {
+		return new Response.Listener<Message>() {
+			@Override
+			public void onResponse(Message message) {
+				if (message.isResult()){
+					progressDialog.dismiss();
+					SuperWeChatApplication.getInstance().getGroupList().add(group);
+					Intent intent = new Intent("update_group_list").putExtra("group",group);
+					Utils.showToast(mContext,Utils.getResourceString(mContext,group.getMsg()),Toast.LENGTH_LONG);
+					setResult(RESULT_OK,intent);
+				}else{
+					progressDialog.dismiss();
+					Utils.showToast(mContext,R.string.Failed_to_create_groups,Toast.LENGTH_LONG);
+				}
+				finish();
+			}
+		};
 	}
 
 	public void back(View view) {
