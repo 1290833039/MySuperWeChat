@@ -17,6 +17,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,10 +26,12 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMGroup;
+import com.easemob.util.EMLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +40,17 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.Group;
 import cn.ucai.superwechat.utils.UserUtils;
 
-public class GroupAdapter extends BaseAdapter {
+public class GroupAdapter extends BaseAdapter implements SectionIndexer {
 
     private LayoutInflater inflater;
     private String newGroup;
     private String addPublicGroup;
     ArrayList<Group> mGroupList;
     Context mContext;
+    List<String> list;
+
+    private SparseIntArray positionOfSection;
+    private SparseIntArray sectionOfPosition;
 
     public GroupAdapter(Context context, int res, ArrayList<Group> groups) {
         this.mContext = context;
@@ -153,5 +160,39 @@ public class GroupAdapter extends BaseAdapter {
         Log.i("main","GroupAdapter--------->initList--->list="+list);
         mGroupList.addAll(list);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Object[] getSections() {
+        positionOfSection = new SparseIntArray();
+        sectionOfPosition = new SparseIntArray();
+        int count = getCount();
+        list = new ArrayList<String>();
+        list.add(mContext.getString(cn.ucai.superwechat.R.string.search_header));
+        positionOfSection.put(0, 0);
+        sectionOfPosition.put(0, 0);
+        for (int i = 1; i < count; i++) {
+
+            String letter = getItem(i).getHeader();
+            Log.i("main", "contactadapter getsection getHeader:" + letter + " name:" + getItem(i).getMGroupName());
+            int section = list.size() - 1;
+            if (list.get(section) != null && !list.get(section).equals(letter)) {
+                list.add(letter);
+                section++;
+                positionOfSection.put(section, i);
+            }
+            sectionOfPosition.put(i, section);
+        }
+        return list.toArray(new String[list.size()]);
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        return positionOfSection.get(sectionIndex);
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        return sectionOfPosition.get(position);
     }
 }

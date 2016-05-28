@@ -182,6 +182,8 @@ public class NewGroupActivity extends BaseActivity {
 				String desc = introductionEditText.getText().toString();
 				//自己自定义
 				Contact[] contacts = (Contact[]) data.getSerializableExtra("newmembers");
+				Log.i("main","NewGroupActivity----------->newGroups--->contacts="+contacts);
+
 				String[] members = null;
 			//	String[] memberIds = null;
 				EMGroup emGroup;

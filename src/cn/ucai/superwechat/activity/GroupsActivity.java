@@ -95,22 +95,44 @@ public class GroupsActivity extends BaseActivity {
 
         instance = this;
         initView();
+        initData();
+        setListener();
 
+        HXSDKHelper.getInstance().addSyncGroupListener(syncListener);
+
+        if (!HXSDKHelper.getInstance().isGroupsSyncedWithServer()) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
+
+        refresh();
+        registerGroupListChangedReceiver();
+    }
+
+    private void setListener() {
+        setGroupRefreshListener();
+        setGroupListViewItemClickListener();
+        setGroupListViewTouchListener();
+        syncListener = new SyncListener();
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        //	grouplist = EMGroupManager.getInstance().getAllGroups();
-        grouplist = SuperWeChatApplication.getInstance().getGroupList();
-        Log.i("main","GroupsActivity---------->onCreate------->groupList="+grouplist);
+    }
 
-
-        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+    private void setGroupListViewTouchListener() {
+        groupListView.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onRefresh() {
-                MainActivity.asyncFetchGroupsFromServer();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+                    if (getCurrentFocus() != null)
+                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                return false;
             }
         });
+    }
 
-        groupAdapter = new GroupAdapter(this, 1, grouplist);
-        groupListView.setAdapter(groupAdapter);
+    private void setGroupListViewItemClickListener() {
         groupListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,29 +153,23 @@ public class GroupsActivity extends BaseActivity {
             }
 
         });
-        groupListView.setOnTouchListener(new OnTouchListener() {
+    }
+
+    private void setGroupRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-                    if (getCurrentFocus() != null)
-                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                                InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-                return false;
+            public void onRefresh() {
+                MainActivity.asyncFetchGroupsFromServer();
             }
         });
+    }
 
-
-        syncListener = new SyncListener();
-        HXSDKHelper.getInstance().addSyncGroupListener(syncListener);
-
-        if (!HXSDKHelper.getInstance().isGroupsSyncedWithServer()) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.GONE);
-        }
-
-        refresh();
+    private void initData() {
+        //	grouplist = EMGroupManager.getInstance().getAllGroups();
+        grouplist = SuperWeChatApplication.getInstance().getGroupList();
+        Log.i("main","GroupsActivity---------->onCreate------->groupList="+grouplist);
+        groupAdapter = new GroupAdapter(this, 1, grouplist);
+        groupListView.setAdapter(groupAdapter);
     }
 
     private void initView() {

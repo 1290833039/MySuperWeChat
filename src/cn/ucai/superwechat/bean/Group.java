@@ -22,7 +22,7 @@ public class Group extends Location implements java.io.Serializable {
 	private Integer mgroupAffiliationsCount;	//当前人数
 	private Boolean mgroupIsPublic;				//是否公开
 	private Boolean mgroupAllowInvites;			//是否可以被邀请
-
+	private String header;
 	// Constructors
 
 	/** default constructor */
@@ -38,6 +38,14 @@ public class Group extends Location implements java.io.Serializable {
 		this.mgroupAffiliationsCount = MGroupAffiliationsCount;
 		this.mgroupIsPublic = MGroupIsPublic;
 		this.mgroupAllowInvites = MGroupAllowInvites;
+	}
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
 	}
 
 	/** full constructor */
