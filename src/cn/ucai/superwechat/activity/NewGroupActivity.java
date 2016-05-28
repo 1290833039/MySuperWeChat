@@ -183,15 +183,15 @@ public class NewGroupActivity extends BaseActivity {
 				//自己自定义
 				Contact[] contacts = (Contact[]) data.getSerializableExtra("newmembers");
 				String[] members = null;
-				String[] memberIds = null;
+			//	String[] memberIds = null;
 				EMGroup emGroup;
 
 				if (contacts!=null){
 					members = new String[contacts.length];
-					memberIds = new String[contacts.length];
+				//	memberIds = new String[contacts.length];
 					for (int i=0;i<contacts.length;i++){
 						members[i] = contacts[i].getMContactCname()+",";
-						memberIds[i] = contacts[i].getMContactId()+",";
+					//	memberIds[i] = contacts[i].getMContactId()+",";
 					}
 				}
 				Log.i("main","NewGroupActivity---------> newGroups---------->contacts.length= "+contacts.length);
