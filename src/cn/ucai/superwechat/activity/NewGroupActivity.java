@@ -201,7 +201,7 @@ public class NewGroupActivity extends BaseActivity {
 					//	memberIds[i] = contacts[i].getMContactId()+",";
 					}
 				}
-
+				Log.i("main","NewGroupActivity---------> newGroups---------->contacts.length= "+contacts.length);
 				try {
 					if(checkBox.isChecked()){
 						//创建公开群，此种方式创建的群，可以自由加入

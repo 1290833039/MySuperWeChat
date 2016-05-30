@@ -25,8 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
-        import android.widget.ArrayAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -38,7 +37,6 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMGroup;
 import com.easemob.util.EMLog;
-
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.bean.Contact;
