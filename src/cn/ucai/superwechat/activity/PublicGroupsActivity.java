@@ -17,8 +17,10 @@ package cn.ucai.superwechat.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,39 +57,26 @@ public class PublicGroupsActivity extends BaseActivity {
     private ProgressBar footLoadingPB;
     private TextView footLoadingText;
     private Button searchBtn;
-    
+    private PublicGroupChangeReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(cn.ucai.superwechat.R.layout.activity_public_groups);
-
-		pb = (ProgressBar) findViewById(cn.ucai.superwechat.R.id.progressBar);
-		listView = (ListView) findViewById(cn.ucai.superwechat.R.id.list);
-		groupsList = new ArrayList<EMGroupInfo>();
-		searchBtn = (Button) findViewById(cn.ucai.superwechat.R.id.btn_search);
-		
-		View footView = getLayoutInflater().inflate(cn.ucai.superwechat.R.layout.listview_footer_view, null);
-        footLoadingLayout = (LinearLayout) footView.findViewById(cn.ucai.superwechat.R.id.loading_layout);
-        footLoadingPB = (ProgressBar)footView.findViewById(cn.ucai.superwechat.R.id.loading_bar);
-        footLoadingText = (TextView) footView.findViewById(cn.ucai.superwechat.R.id.loading_text);
-        listView.addFooterView(footView, null, false);
-        footLoadingLayout.setVisibility(View.GONE);
-        
+        initView();
+		setListener();
         //获取及显示数据
         loadAndShowData();
-        
-        //设置item点击事件
-        listView.setOnItemClickListener(new OnItemClickListener() {
+	}
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(PublicGroupsActivity.this, GroupSimpleDetailActivity.class).
-                        putExtra("groupinfo", adapter.getItem(position)));
-            }
-        });
+    private void setListener() {
+        setItemClickListener();
+        setScrollListener();
+        registerPublicGroupChangeReceiver();
+    }
+
+    private void setScrollListener() {
         listView.setOnScrollListener(new OnScrollListener() {
-            
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
@@ -99,16 +88,41 @@ public class PublicGroupsActivity extends BaseActivity {
                     }
                 }
             }
-            
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                
+
             }
         });
-        
-	}
-	
-	/**
+    }
+
+    private void setItemClickListener() {
+        //设置item点击事件
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(PublicGroupsActivity.this, GroupSimpleDetailActivity.class).
+                        putExtra("groupinfo", adapter.getItem(position)));
+            }
+        });
+    }
+
+    private void initView() {
+        pb = (ProgressBar) findViewById(cn.ucai.superwechat.R.id.progressBar);
+        listView = (ListView) findViewById(cn.ucai.superwechat.R.id.list);
+        searchBtn = (Button) findViewById(cn.ucai.superwechat.R.id.btn_search);
+
+        View footView = getLayoutInflater().inflate(cn.ucai.superwechat.R.layout.listview_footer_view, null);
+        footLoadingLayout = (LinearLayout) footView.findViewById(cn.ucai.superwechat.R.id.loading_layout);
+        footLoadingPB = (ProgressBar)footView.findViewById(cn.ucai.superwechat.R.id.loading_bar);
+        footLoadingText = (TextView) footView.findViewById(cn.ucai.superwechat.R.id.loading_text);
+        listView.addFooterView(footView, null, false);
+        footLoadingLayout.setVisibility(View.GONE);
+
+        groupsList = new ArrayList<EMGroupInfo>();
+    }
+    /**
 	 * 搜索
 	 * @param view
 	 */
@@ -118,7 +132,6 @@ public class PublicGroupsActivity extends BaseActivity {
 	
 	private void loadAndShowData(){
 	    new Thread(new Runnable() {
-
             public void run() {
                 try {
                     isLoading = true;
@@ -161,7 +174,7 @@ public class PublicGroupsActivity extends BaseActivity {
                             isLoading = false;
                             pb.setVisibility(View.INVISIBLE);
                             footLoadingLayout.setVisibility(View.GONE);
-                            Toast.makeText(PublicGroupsActivity.this, "加载数据失败，请检查网络或稍后重试", 0).show();
+                            Toast.makeText(PublicGroupsActivity.this, "加载数据失败，请检查网络或稍后重试", Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -196,4 +209,25 @@ public class PublicGroupsActivity extends BaseActivity {
 	public void back(View view){
 		finish();
 	}
+
+    class PublicGroupChangeReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadAndShowData();
+        }
+    }
+
+    public void registerPublicGroupChangeReceiver(){
+        mReceiver = new PublicGroupChangeReceiver();
+        IntentFilter filter = new IntentFilter("update_public_group");
+        registerReceiver(mReceiver,filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mReceiver!=null){
+            unregisterReceiver(mReceiver);
+        }
+    }
 }

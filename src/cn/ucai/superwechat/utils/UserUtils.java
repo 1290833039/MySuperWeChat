@@ -13,6 +13,7 @@ import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.applib.controller.HXSDKHelper;
 import cn.ucai.superwechat.DemoHXSDKHelper;
 import cn.ucai.superwechat.bean.Contact;
+import cn.ucai.superwechat.bean.Group;
 import cn.ucai.superwechat.data.RequestManager;
 import cn.ucai.superwechat.domain.User;
 
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.util.HanziToPinyin;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserUtils {
@@ -194,50 +196,47 @@ public class UserUtils {
         ((DemoHXSDKHelper) HXSDKHelper.getInstance()).saveContact(newUser);
     }
 
-    /**
-     * 设置hearder属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
-     *
-     * @param username
-     * @param user
-     */
-    public static void setUserHearder(String username, Contact user) {
-        String headerName = null;
-        if (!TextUtils.isEmpty(user.getMUserNick())) {
-            headerName = user.getMUserNick();
-        } else {
-            headerName = user.getMContactCname();
-        }
-        if (username.equals(Constant.NEW_FRIENDS_USERNAME)
-                || username.equals(Constant.GROUP_USERNAME)) {
-            user.setHeader("");
-        } else if (Character.isDigit(headerName.charAt(0))) {
-            user.setHeader("#");
-        } else {
-            user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(0, 1)
-                    .toUpperCase());
-            char header = user.getHeader().toLowerCase().charAt(0);
-            if (header < 'a' || header > 'z') {
-                user.setHeader("#");
-            }
-        }
-    }
 
-    //设置群组头像
-    public static void setGroupBeanAvatar(String mGroupHxid, NetworkImageView imageView) {
-        if (mGroupHxid != null && !mGroupHxid.isEmpty()) {
-            setGroupAvatar(getGroupAvatarPath(mGroupHxid), imageView);
-        }
-    }
+	//设置群组头像
+	public static void setGroupBeanAvatar(String mGroupHxid, NetworkImageView imageView) {
+		if (mGroupHxid != null && !mGroupHxid.isEmpty()) {
+			setGroupAvatar(getGroupAvatarPath(mGroupHxid), imageView);
+		}
+	}
 
-    public static String getGroupAvatarPath(String hxid) {
-        if (hxid == null || hxid.isEmpty()) return null;
-        return I.REQUEST_DOWNLOAD_AVATAR_GROUP + hxid;
-    }
+	public static String getGroupAvatarPath(String hxid) {
+		if (hxid == null || hxid.isEmpty()) return null;
+		return I.REQUEST_DOWNLOAD_AVATAR_GROUP + hxid;
+	}
 
-    public static void setGroupAvatar(String url, NetworkImageView imageView) {
-        if (url == null || url.isEmpty()) return;
-        imageView.setDefaultImageResId(R.drawable.group_icon);
-        imageView.setImageUrl(url, RequestManager.getImageLoader());
-        imageView.setErrorImageResId(R.drawable.group_icon);
-    }
+	public static void setGroupAvatar(String url, NetworkImageView imageView) {
+		if (url == null || url.isEmpty()) return;
+		imageView.setDefaultImageResId(R.drawable.group_icon);
+		imageView.setImageUrl(url, RequestManager.getImageLoader());
+		imageView.setErrorImageResId(R.drawable.group_icon);
+	}
+	//汉字转拼音
+	public static String getPinYinFromHanZi(String hanzi) {
+		String pinyin = "";
+
+		for(int i=0;i<hanzi.length();i++){
+			String s = hanzi.substring(i,i+1);
+			pinyin = pinyin + HanziToPinyin.getInstance()
+					.get(s).get(0).target.toLowerCase();
+		}
+		return pinyin;
+	}
+
+	public static Group getGroupBeanFromHxId(String hxid){
+		if (hxid!=null && !hxid.isEmpty()){
+			ArrayList<Group> groupList = SuperWeChatApplication.getInstance().getGroupList();
+			for (Group group: groupList){
+				if (group.getMGroupHxid().equals(hxid)) {
+					return group;
+				}
+			}
+		}
+		return null;
+	}
+
 }
