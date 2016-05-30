@@ -13,6 +13,7 @@
  */
 package cn.ucai.superwechat.adapter;
 
+
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -195,4 +196,5 @@ public class GroupAdapter extends BaseAdapter implements SectionIndexer {
     public int getSectionForPosition(int position) {
         return sectionOfPosition.get(position);
     }
+
 }
