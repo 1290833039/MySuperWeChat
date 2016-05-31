@@ -10,16 +10,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.EMError;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.bean.Group;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
+import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
+
 public class PublicGroupsSeachActivity extends BaseActivity{
     private RelativeLayout containerLayout;
     private EditText idET;
     private TextView nameText;
-    public static EMGroup searchedGroup;
+    public static Group searchedGroup;
+    ProgressDialog pd;
+    private NetworkImageView avatar;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -29,7 +41,7 @@ public class PublicGroupsSeachActivity extends BaseActivity{
         containerLayout = (RelativeLayout) findViewById(cn.ucai.superwechat.R.id.rl_searched_group);
         idET = (EditText) findViewById(cn.ucai.superwechat.R.id.et_search_id);
         nameText = (TextView) findViewById(cn.ucai.superwechat.R.id.name);
-        
+        avatar = (NetworkImageView) findViewById(R.id.avatar);
         searchedGroup = null;
     }
     
@@ -42,12 +54,22 @@ public class PublicGroupsSeachActivity extends BaseActivity{
             return;
         }
         
-        final ProgressDialog pd = new ProgressDialog(this);
+        pd = new ProgressDialog(this);
         pd.setMessage(getResources().getString(cn.ucai.superwechat.R.string.searching));
         pd.setCancelable(false);
         pd.show();
-        
-        new Thread(new Runnable() {
+
+        try {
+            String path = new ApiParams()
+                    .with(I.Group.HX_ID,idET.getText().toString())
+                    .getRequestUrl(I.REQUEST_FIND_PUBLIC_GROUP_BY_HXID);
+            executeRequest(new GsonRequest<Group>(path,Group.class,
+                    responseFindPublicListener(),errorListener()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+       /* new Thread(new Runnable() {
 
             public void run() {
                 try {
@@ -68,19 +90,38 @@ public class PublicGroupsSeachActivity extends BaseActivity{
                             searchedGroup = null;
                             containerLayout.setVisibility(View.GONE);
                             if(e.getErrorCode() == EMError.GROUP_NOT_EXIST){
-                                Toast.makeText(getApplicationContext(), getResources().getString(cn.ucai.superwechat.R.string.group_not_existed), 0).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(cn.ucai.superwechat.R.string.group_not_existed), Toast.LENGTH_SHORT).show();
                             }else{
-                                Toast.makeText(getApplicationContext(), getResources().getString(cn.ucai.superwechat.R.string.group_search_failed) + " : " + getString(cn.ucai.superwechat.R.string.connect_failuer_toast), 0).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(cn.ucai.superwechat.R.string.group_search_failed) + " : " + getString(cn.ucai.superwechat.R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 }
             }
-        }).start();
+        }).start();*/
         
     }
-    
-    
+
+    private Response.Listener<Group> responseFindPublicListener() {
+        return new Response.Listener<Group>() {
+            @Override
+            public void onResponse(Group group) {
+                if (group!=null){
+                    searchedGroup = group;
+                    containerLayout.setVisibility(View.VISIBLE);
+                    nameText.setText(searchedGroup.getMGroupName());
+                    UserUtils.setGroupBeanAvatar(group.getMGroupHxid(), avatar);
+                }else{
+                    Utils.showToast(PublicGroupsSeachActivity.this,
+                            R.string.group_not_existed,Toast.LENGTH_LONG);
+                }
+                pd.dismiss();
+            }
+        };
+
+    }
+
+
     /**
      * 点击搜索到的群组进入群组信息页面
      * @param view
