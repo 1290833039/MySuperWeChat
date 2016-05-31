@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroup;
@@ -29,10 +30,14 @@ import com.easemob.chat.EMGroupInfo;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
 
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.bean.Group;
+import cn.ucai.superwechat.data.ApiParams;
+import cn.ucai.superwechat.data.GsonRequest;
 import cn.ucai.superwechat.utils.UserUtils;
+import cn.ucai.superwechat.utils.Utils;
 
 public class GroupSimpleDetailActivity extends BaseActivity {
 	private Button btn_add_group;
@@ -62,19 +67,28 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 		    groupname = groupInfo.getMGroupName();
 		    groupid = groupInfo.getMGroupHxid();
 		}else{
-		   /* group = PublicGroupsSeachActivity.searchedGroup;
+		    group = PublicGroupsSeachActivity.searchedGroup;
 		    if(group == null)
 		        return;
-		    groupname = group.getGroupName();
-		    groupid = group.getGroupId();*/
+		    groupname = group.getMGroupName();
+		    groupid = group.getMGroupHxid();
 		}
 		
 		tv_name.setText(groupname);
 		
-		
 		if(group != null){
 		    showGroupDetail();
 		    return;
+		}
+
+		try {
+			String path = new ApiParams()
+					.with(I.Group.HX_ID,groupid)
+					.getRequestUrl(I.REQUEST_FIND_PUBLIC_GROUP_BY_HXID);
+			executeRequest(new GsonRequest<Group>(path,Group.class,
+					responseFindPublicListener(),errorListener()));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		/*new Thread(new Runnable() {
 
@@ -102,7 +116,26 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 		}).start();*/
 		
 	}
-	
+
+	private Response.Listener<Group> responseFindPublicListener() {
+		return new Response.Listener<Group>() {
+			@Override
+			public void onResponse(Group group) {
+				if (group!=null){
+					showGroupDetail();
+				}else{
+					final String st1 = getResources().getString(cn.ucai.superwechat.R.string.Failed_to_get_group_chat_information);
+					runOnUiThread(new Runnable() {
+						public void run() {
+							progressBar.setVisibility(View.INVISIBLE);
+							Toast.makeText(GroupSimpleDetailActivity.this, st1, Toast.LENGTH_LONG).show();
+						}
+					});
+				}
+			}
+		};
+	}
+
 	//加入群聊
 	public void addToGroup(View view){
 		String st1 = getResources().getString(cn.ucai.superwechat.R.string.Is_sending_a_request);
@@ -115,11 +148,12 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
-		/*new Thread(new Runnable() {
+
+		new Thread(new Runnable() {
 			public void run() {
 				try {
 					//如果是membersOnly的群，需要申请加入，不能直接join
-					if(group.isMembersOnly()){
+					if(group.getMGroupAllowInvites()){
 					    EMGroupManager.getInstance().applyJoinToGroup(groupid, st2);
 					}else{
 					    EMGroupManager.getInstance().joinGroup(groupid);
@@ -127,7 +161,7 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 					runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
-							if(group.isMembersOnly())
+							if(group.getMGroupAllowInvites())
 								Toast.makeText(GroupSimpleDetailActivity.this, st3, Toast.LENGTH_LONG).show();
 							else
 								Toast.makeText(GroupSimpleDetailActivity.this, st4, Toast.LENGTH_LONG).show();
@@ -144,7 +178,7 @@ public class GroupSimpleDetailActivity extends BaseActivity {
 					});
 				}
 			}
-		}).start();*/
+		}).start();
 	}
 	
      private void showGroupDetail() {

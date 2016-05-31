@@ -112,6 +112,7 @@ public class PublicGroupsSeachActivity extends BaseActivity{
                     nameText.setText(searchedGroup.getMGroupName());
                     UserUtils.setGroupBeanAvatar(group.getMGroupHxid(), avatar);
                 }else{
+                    containerLayout.setVisibility(View.GONE);
                     Utils.showToast(PublicGroupsSeachActivity.this,
                             R.string.group_not_existed,Toast.LENGTH_LONG);
                 }
