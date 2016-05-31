@@ -124,13 +124,17 @@ public class GroupAdapter extends BaseAdapter implements SectionIndexer {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.row_add_group, null);
             }
-            ((ImageView) convertView.findViewById(R.id.avatar)).setImageResource(R.drawable.create_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setImageResource(R.drawable.create_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setDefaultImageResId(R.drawable.create_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setErrorImageResId(R.drawable.create_group);
             ((TextView) convertView.findViewById(R.id.name)).setText(newGroup);
         } else if (getItemViewType(position) == 2) {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.row_add_group, null);
             }
-            ((ImageView) convertView.findViewById(R.id.avatar)).setImageResource(R.drawable.add_public_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setImageResource(R.drawable.add_public_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setDefaultImageResId(R.drawable.add_public_group);
+            ((NetworkImageView) convertView.findViewById(R.id.avatar)).setErrorImageResId(R.drawable.add_public_group);
             ((TextView) convertView.findViewById(R.id.name)).setText(addPublicGroup);
             ((TextView) convertView.findViewById(R.id.header)).setVisibility(View.VISIBLE);
 

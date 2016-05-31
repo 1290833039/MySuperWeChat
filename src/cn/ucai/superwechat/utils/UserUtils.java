@@ -239,5 +239,27 @@ public class UserUtils {
 		return null;
 	}
 
+    public static void setUserHearder(String username, Contact user) {
+        String headerName = null;
+        if (!TextUtils.isEmpty(user.getMUserNick())) {
+            headerName = user.getMUserNick();
+        } else {
+            headerName = user.getMContactCname();
+        }
+        if (username.equals(Constant.NEW_FRIENDS_USERNAME)
+                || username.equals(Constant.GROUP_USERNAME)) {
+            user.setHeader("");
+        } else if (Character.isDigit(headerName.charAt(0))) {
+            user.setHeader("#");
+        } else {
+            user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(0, 1)
+                    .toUpperCase());
+            char header = user.getHeader().toLowerCase().charAt(0);
+            if (header < 'a' || header > 'z') {
+                user.setHeader("#");
+            }
+        }
+
+    }
 
 }

@@ -237,7 +237,7 @@ public class NewGroupActivity extends BaseActivity {
 		});
 	}
 
-	private void createNewGroupAppServer(String hxId, String groupName, String desc, final Contact[] contacts) {
+	private void createNewGroupAppServer(String hxId, final String groupName, String desc, final Contact[] contacts) {
 		User user = SuperWeChatApplication.getInstance().getUser();
 		boolean isPublic = checkBox.isChecked();
 		boolean isInvites = memberCheckbox.isChecked();
@@ -251,7 +251,7 @@ public class NewGroupActivity extends BaseActivity {
 
 		OkHttpUtils<Group> utils = new OkHttpUtils<Group>();
 		utils.url(SuperWeChatApplication.SERVER_ROOT)//设置服务端根地址
-				.addParam(I.KEY_REQUEST,I.REQUEST_CREATE_GROUP)//天津爱上传的请求参数
+				.addParam(I.KEY_REQUEST,I.REQUEST_CREATE_GROUP)//添加上传的请求参数
 				.addParam(I.Group.HX_ID,hxId)//添加用户的账号
 				.addParam(I.Group.NAME,groupName)//添加用户的昵称
 				.addParam(I.Group.DESCRIPTION,desc)//添加用户密码
@@ -267,11 +267,11 @@ public class NewGroupActivity extends BaseActivity {
 						if(group.isResult()){
 							if (contacts!=null){
 								//调用
-								Log.i("main","NewGroupActivity---------> createNewGroupAppServer---------1");
+								Log.i("main","NewGroupActivity---------> createNewGroupAppServer---------contacts="+contacts);
 								addGroupMembers(group,contacts);
 							}else {
-								Log.i("main","NewGroupActivity---------> createNewGroupAppServer----------2");
 								SuperWeChatApplication.getInstance().getGroupList().add(group);
+								Log.i("main","NewGroupActivity---------> createNewGroupAppServer----------group"+group);
 								Intent intent = new Intent("update_group_list").putExtra("group",group);
 								setResult(RESULT_OK,intent);
 								progressDialog.dismiss();
@@ -291,9 +291,6 @@ public class NewGroupActivity extends BaseActivity {
 						Utils.showToast(mContext,error,Toast.LENGTH_SHORT);
 					}
 				});
-
-
-
 	}
 	//添加群组成员
 	private void addGroupMembers(Group group, Contact[] contacts) {

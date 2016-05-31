@@ -149,7 +149,7 @@ public class GroupsActivity extends BaseActivity {
 					// it is group chat
 					intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
 					//改
-					intent.putExtra("groupId", groupAdapter.getItem(position-3).getMGroupId());
+					intent.putExtra("groupId", groupAdapter.getItem(position).getMGroupId());
 					startActivityForResult(intent, 0);
 				}
 			}
@@ -159,7 +159,6 @@ public class GroupsActivity extends BaseActivity {
 
 	private void setGroupRefreshListener() {
 		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-
 			@Override
 			public void onRefresh() {
 				MainActivity.asyncFetchGroupsFromServer();
@@ -168,7 +167,7 @@ public class GroupsActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		//	grouplist = EMGroupManager.getInstance().getAllGroups();
+	//	grouplist = EMGroupManager.getInstance().getAllGroups();
 		grouplist = SuperWeChatApplication.getInstance().getGroupList();
 		Log.i("main","GroupsActivity-------->onCreate-->grouplist="+grouplist);
 		groupAdapter = new GroupAdapter(this, 1, grouplist);

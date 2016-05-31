@@ -26,7 +26,7 @@ public class DownloadAllGroupTask extends BaseActivity {
     String username;
     String url;
 
-    public DownloadAllGroupTask(Context mContext, String usernamee) {
+    public DownloadAllGroupTask(Context mContext, String username) {
         this.mContext = mContext;
         this.username = username;
         initUrl();
@@ -36,6 +36,7 @@ public class DownloadAllGroupTask extends BaseActivity {
         try {
             url = new ApiParams().with(I.User.USER_NAME,username)
                     .getRequestUrl(I.REQUEST_DOWNLOAD_GROUPS);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,8 +51,9 @@ public class DownloadAllGroupTask extends BaseActivity {
         return new Response.Listener<Group[]>(){
             @Override
             public void onResponse(Group[] response) {
+                Log.i("main","DownloadAllGroupTask--------->response=  "+response);
                 if (response != null && response.length>0){
-                    Log.i("main","DownloadAllGroupTask"+ response.length);
+                    Log.i("main","DownloadAllGroupTask= "+ response.length);
 
                     ArrayList<Group> list = Utils.array2List(response);
                     ArrayList<Group> groupsList =
