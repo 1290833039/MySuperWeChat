@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,21 +38,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.easemob.chat.EMCursorResult;
 import com.easemob.chat.EMGroupInfo;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.exceptions.EaseMobException;
 
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.bean.Group;
 import cn.ucai.superwechat.task.DownloadPublicGroupTask;
+import cn.ucai.superwechat.utils.UserUtils;
 
 public class PublicGroupsActivity extends BaseActivity {
 	private ProgressBar pb;
 	private ListView listView;
 	private GroupsAdapter adapter;
 
-	private List<Group> groupsList;
+	private ArrayList<Group> groupsList;
 	private boolean isLoading;
 	private boolean isFirstLoading = true;
 	private boolean hasMoreData = true;
@@ -203,23 +207,39 @@ public class PublicGroupsActivity extends BaseActivity {
 	 * adapter
 	 *
 	 */
-	private class GroupsAdapter extends ArrayAdapter<Group> {
+	private class GroupsAdapter extends BaseAdapter{
 
 		private LayoutInflater inflater;
-
-		public GroupsAdapter(Context context, int res, List<Group> groups) {
-			super(context, res, groups);
+        ArrayList<Group> mGroupList;
+		public GroupsAdapter(Context context, int res, ArrayList<Group> groups) {
 			this.inflater = LayoutInflater.from(context);
+            mGroupList = groups;
 		}
 
-		@Override
+        @Override
+        public int getCount() {
+            return mGroupList==null?0:mGroupList.size();
+        }
+
+        @Override
+        public Group getItem(int position) {
+            return mGroupList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = inflater.inflate(cn.ucai.superwechat.R.layout.row_group, null);
 			}
-
+            Group group = getItem(position);
 			((TextView) convertView.findViewById(cn.ucai.superwechat.R.id.name)).setText(getItem(position).getMGroupName());
-
+            UserUtils.setGroupBeanAvatar(group.getMGroupHxid(),
+                    (NetworkImageView) convertView.findViewById(R.id.avatar));
 			return convertView;
 		}
 	}
